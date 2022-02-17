@@ -28,10 +28,33 @@ std::string getContent(std::string file)
   return 0;
 }
 
+int parseContent(std::string content)
+{
+    size_t posStart = 0;
+    size_t posEnd = content.length();
+    //check wheter there is an even number of {/}
+    while (posStart != posEnd)
+    {
+        if ((posStart = content.find("{", posStart)) == std::string::npos)
+        {
+            if ((posEnd = content.rfind("}", posEnd)) == std::string::npos)
+                return TRUE;
+            else
+                return FALSE;
+        }
+        if ((posEnd = content.rfind("}", posEnd)) == std::string::npos)
+            return FALSE;
+        posStart++;
+        posEnd--;
+    }
+    return TRUE;
+}
+
 int main(void)
 {
     std::string file = "conf_example.conf";
     std::string output = "";
     output = getContent(file);
     std::cout << output << std::endl;
+    std::cout << "is valid {} : " << parseContent(output) << std::endl;
 }

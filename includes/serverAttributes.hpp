@@ -6,6 +6,9 @@
 #include <fstream>
 #include <vector>
 
+#define TRUE 1
+#define FALSE 0
+
 struct locations
 {
     std::string index;

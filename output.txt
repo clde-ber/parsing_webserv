@@ -1,153 +1,137 @@
-Reading 1134 characters... all characters read successfully.events {}
-http {
-server {
-        listen 80;
-        listen [::]:80;
-        server_name 192.168.49.2;
-        return 301 https://$server_name$request_uri;
-        }
+Reading 812 characters... all characters read successfully.http {
+	server {
+		listen      			8080;
+		server_name				default_server;
+		location / {
+			root					directory;
+			default					index.html;
+			upload					upload;
+			dirList					OFF;
+		}
+		location /files/get/ {
+			root					directory;
+			method					GET;
+		}
+        error_page 404          directory/custom_error/404.html;
+		client_max_body_size	1000000;
+		cgi						.cgi .php .py;
+	}
 
-server {
-        listen 443 ssl;
-        listen [::]:443 ssl;
-        server_name 192.168.49.2;
-        ssl_certificate /etc/nginx/ssl/nginx.crt;
-        ssl_certificate_key /etc/nginx/ssl/nginx.key;
+	server {
+		listen			8080;
+		server_name		second_server;
+		location / {
+			root		directory/42green;
+			default		index.html;
+		}
+	}
 
-        root /var/lib/nginx/html/;
-        index index.html;
+	server {
+		listen			8094;
+		server_name		42green;
+		location / {
+            root                    directory/42green;
+			method					GET;
+			default					index.html;
+		}
+	}
 
-        location / {
-                try_files $uri $uri/ =404;
-        }
-
-        location /wordpress {
-                return 307 http://192.168.49.2:5050;
-        }
-
-        location /phpmyadmin/ {
-                root var/www/html/phpmyadmin;
-                index index.php;
-                proxy_set_header Host $host;                                  
-                proxy_set_header X-Real-IP $remote_addr;       
-                proxy_set_header Accept-Encoding "";               
-                proxy_buffers 16 4k;                                     
-                proxy_buffer_size 2k;                                  
-                proxy_pass http://192.168.49.2:5000/;
-        }
+	server {
+		listen					8097;
+		server_name				42green_old;
+		location / {
+			return					301 http://localhost:8082;
+		}
+	}
 }
-}
-is valid {} : block ser => 
-        listen 80;
-        listen [::]:80;
-        server_name 192.168.49.2;
-        return 301 https://$server_name$request_uri;
-        
-
-SERVER IDlisten
-
-category = server
-key = listen
-content = 80
-
-SERVER IDlisten
-
-category = server
-key = listen
-content = [::]:80
-
-SERVER IDserver_name
-
-category = server
-key = server_name
-content = 192.168.49.2
-
-SERVER IDreturn
-
-category = server
-key = return
-content = 301 https://$server_name$request_uri
-block ser => 
-        listen 443 ssl;
-        listen [::]:443 ssl;
-        server_name 192.168.49.2;
-        ssl_certificate /etc/nginx/ssl/nginx.crt;
-        ssl_certificate_key /etc/nginx/ssl/nginx.key;
-
-        root /var/lib/nginx/html/;
-        index index.html;
-
-        location / {
-                try_files $uri $uri/ =404;
-        }
-
-        location /wordpress {
-                return 307 http://192.168.49.2:5050;
-        }
-
-        location /phpmyadmin/ {
-                root var/www/html/phpmyadmin;
-                index index.php;
-                proxy_set_header Host $host;                                  
-                proxy_set_header X-Real-IP $remote_addr;       
-                proxy_set_header Accept-Encoding "";               
-                proxy_buffers 16 4k;                                     
-                proxy_buffer_size 2k;                                  
-                proxy_pass http://192.168.49.2:5000/;
-        }
-
-
-SERVER IDlisten
-
-category = server
-key = listen
-content = 443 ssl
-
-SERVER IDlisten
-
-category = server
-key = listen
-content = [::]:443 ssl
-
-SERVER IDserver_name
-
-category = server
-key = server_name
-content = 192.168.49.2
-
-SERVER IDroot
-
-category = server
-key = root
-content = /var/lib/nginx/html/
-
-SERVER IDroot
-
-category = server
-key = root
-content = var/www/html/phpmyadmin
-
-SERVER IDindex
-
-category = server
-key = index
-content = index.php
-category = server
-key = index
-content = proxy_set_header Host $host
-category = server
-key = index
-content = proxy_set_header X-Real-IP $remote_addr
-category = server
-key = index
-content = proxy_set_header Accept-Encoding ""
-category = server
-key = index
-content = proxy_buffers 16 4k
-category = server
-key = index
-content = proxy_buffer_size 2k
-category = server
-key = index
-content = proxy_pass http://192.168.49.2:5000/
+bool is valid : id_keylisten
+id_keyserver_name
+id_keylocation
+location name  / 
+location name  /*
+BLOCKLOCATION
+			root					directory;
+			default					index.html;
+			upload					upload;
+			dirList					OFF;
+		
+id_keylocation
+location name  / 
+location name  /*
+BLOCKLOCATION
+			root					directory;
+			method					GET;
+		
+id_keyerror_page
+id_keyclient_max_body_size
+id_keycgi
+id_keycgi
+id_keyroot
+id_keyroot
+id_keyroot
+id_keyroot
+id_keyroot
+2 heyla
+ici
 0
+indice : [0]
+*************
+serveur : 
+clé : [listen] | valeur [0] : 8080
+clé : [server_name] | valeur [0] : default_server
+*************
+location : 
+*************
+
+indice : [1]
+*************
+serveur : 
+*************
+location : 
+clé : [root] | valeur [0] : directory
+clé : [index]
+clé : [methods]
+clé : [autoindex]
+clé : [upload_dir]
+clé : [cgi]
+clé : [redirect]
+clé : [return]
+clé : [try_files]
+clé : [proxy_set_header]
+clé : [proxy_buffers]
+clé : [proxy_buffer_size]
+clé : [proxy_pass]
+clé : [method]
+clé : [default] | valeur [0] : index.html
+clé : [upload] | valeur [0] : upload
+clé : [dirList] | valeur [0] : OFF
+*************
+
+indice : [2]
+*************
+serveur : 
+*************
+location : 
+clé : [root] | valeur [0] : directory
+clé : [index]
+clé : [methods]
+clé : [autoindex]
+clé : [upload_dir]
+clé : [cgi]
+clé : [redirect]
+clé : [return]
+clé : [try_files]
+clé : [proxy_set_header]
+clé : [proxy_buffers]
+clé : [proxy_buffer_size]
+clé : [proxy_pass]
+clé : [method] | valeur [0] : GET
+*************
+
+indice : [3]
+*************
+serveur : 
+*************
+location : 
+*************
+

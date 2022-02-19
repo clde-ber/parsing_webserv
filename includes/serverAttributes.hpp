@@ -30,12 +30,14 @@ class serverConf
         void pushLocationIds(std::map< std::string, std::vector< std::string > > location);
         int isValid(std::string content);
         int setIds(std::string content);
+        int addLocation();
         int setValues(std::string content);
         std::string getBlock(std::string content);
         std::string getBlockServer(std::string content);
         std::string getBlockLocation(std::string content);
         int isValidLocation(std::string content);
         int isValidServer(std::string content);
+        int setLocationId(std::string name);
         void printMap();
 };
 

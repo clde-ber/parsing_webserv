@@ -61,8 +61,7 @@ int serverConf::isValidLocation(std::string content)
 
     while (pos != content.length())
     {
-        category = "";
-        while (category == "" && i < location_ids.size())
+        while (i < location_ids.size())
         {
             if (content.find(location_ids[i], pos) != std::string::npos && isspace(content.at(content.find(location_ids[i], pos) + location_ids[i].length())))
             {
@@ -109,7 +108,6 @@ int serverConf::isValidServer(std::string content)
 
     while (pos != content.length())
     {
-        category = "";
         while (i < server_ids.size())
         {
             if (content.find(server_ids[i], pos) != std::string::npos && isspace(content.at(content.find(server_ids[i], pos) + server_ids[i].length())))

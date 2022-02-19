@@ -36,6 +36,7 @@ class serverConf
         std::string getBlockLocation(std::string content);
         int isValidLocation(std::string content);
         int isValidServer(std::string content);
+        void printMap();
 };
 
 #endif

@@ -99,9 +99,10 @@ int serverConf::isValidLocation(std::string content)
         std::cout << "category = " << category << std::endl;
         std::cout << "key = " << key << std::endl;
         std::cout << "content = " << trim_content << std::endl;
-        value.push_back(content.substr(pos + key.length(), idx - (pos + key.length())));
+        value.push_back(trim_content);
         pos = idx + 1;
-        http.data()[http.size() - 1][category].insert(std::make_pair(key, value));
+        http.data()[http.size() - 1][category][key].push_back(trim_content);
+        std::cout << "VALEUUUUUUUUUUR " << http.data()[http.size() - 1][category].at(key).at(0);
         i = 0;
     }
     return TRUE;
@@ -124,10 +125,6 @@ int serverConf::isValidServer(std::string content)
         while (i < server_ids.size())
         {
             is_location = 0;
-            std::cout << std::endl;
-            std::cout << "SERVER ID" << server_ids[i] << std::endl;
-            std::cout << std::endl;
-            std::cout << "remaining content : " << &content[pos] << std::endl;
             if (content.find(server_ids[i], pos) != std::string::npos && isspace(content.at(content.find(server_ids[i], pos) + server_ids[i].length())))
             {
                 if (server_ids[i] == "location")
@@ -167,9 +164,10 @@ int serverConf::isValidServer(std::string content)
         std::cout << "category = " << category << std::endl;
         std::cout << "key = " << key << std::endl;
         std::cout << "content = " << trim_content << std::endl;
-        value.push_back(content.substr(pos + key.length(), idx - (pos + key.length())));
+        value.push_back(trim_content);
         pos = idx + 1;
-        http.data()[http.size() - 1][category].insert(std::make_pair(key, value));
+        http.data()[http.size() - 1][category][key].push_back(trim_content);
+        std::cout << "VALEUUUUUUUUUUR " << http.data()[http.size() - 1][category].at(key).at(0);
         i = 0;
         }
     }
@@ -367,6 +365,47 @@ int serverConf::parseContent(std::string content)
     return TRUE;
 }
 
+void serverConf::printMap()
+{
+    size_t i = 0;
+    size_t j = 0;
+    size_t k = 0;
+    std::cout << "HTTP SIZE" << http.size() << std::endl;
+    //http.data()[http.size() - 1][category].insert(std::make_pair(key, value));
+    while (i < http.size())
+    {
+        std::cout << "indice : [" << i << "]" << std::endl;
+        std::cout << "*************" << std::endl;
+        std::cout << "serveur : [" << i << "]" << std::endl;
+        while (j < http.data()[i]["server"].size())
+        {
+            std::cout << "clé : [" << server_ids[j] << "]" << std::endl;
+            while (k < http.data()[i]["server"][server_ids[j]].size())
+            {
+                std::cout << "valeur [" << k << "] : " << http.data()[i]["server"][server_ids[j]][k] << std::endl;
+                k++;
+            }
+            k = 0;
+            j++;
+        }
+        j = 0;
+        std::cout << "*************" << std::endl;
+        std::cout << "location : [" << i << "]" << std::endl;
+        while (j < http.data()[i]["location"].size())
+        {
+            std::cout << "clé : [" << location_ids[j] << "]" << std::endl;
+            while (k < http.data()[i]["location"][location_ids[j]].size())
+            {
+                std::cout << "valeur [" << k << "] : " << http.data()[i]["location"][location_ids[j]][k] << std::endl;
+                k++;
+            }
+            k = 0;
+            j++;
+        }
+        i++;
+    }
+}
+
 int main(void)
 {
     serverConf conf;
@@ -398,5 +437,6 @@ int main(void)
     output += getContent(file);
     std::cout << output << std::endl;
     std::cout << "is valid {} : " << conf.parseContent(output) << std::endl;
+    conf.printMap();
     return TRUE;
 }

@@ -50,6 +50,102 @@ void serverConf::pushLocationIds(std::map< std::string, std::vector< std::string
     location.insert(std::pair< std::string, std::vector< std::string > >("redirect", std::vector< std::string >()));
 }
 
+int serverConf::isValidLocation(std::string content)
+{
+    size_t i = 0;
+    size_t pos = 0;
+    size_t idx = 0;
+    size_t j = 0;
+    std::string key = "";
+    std::string category = "";
+
+    while (pos != content.length())
+    {
+        category = "";
+        while (category == "" && i < location_ids.size())
+        {
+            if (content.find(location_ids[i], pos) != std::string::npos && isspace(content.at(content.find(location_ids[i], pos) + location_ids[i].length())))
+            {
+                if (http.data()[http.size() - 1]["location"][location_ids[i]].empty())
+                {
+                    pos = content.find(location_ids[i], pos);
+                    category = "location";
+                    key = location_ids[i];
+                    break ;
+                }
+            }
+            i++;
+        }
+        while (pos + j < content.length() && isspace(content.at(pos + j)))
+            j++;
+        if (pos + j == content.length())
+            return TRUE;
+        else if (content.find(";", pos) != std::string::npos)
+            idx = content.find(";", pos);
+        else
+            return FALSE;
+        std::vector< std::string > value;
+        std::string raw_content = content.substr(pos + key.length(), idx - (pos + key.length()));
+        std::string trim_content = raw_content.substr(raw_content.find_first_not_of("\t\n\r\v\f "), raw_content.length() - raw_content.find_first_not_of("\t\n\r\v\f "));
+        std::cout << "category = " << category << std::endl;
+        std::cout << "key = " << key << std::endl;
+        std::cout << "content = " << trim_content << std::endl;
+        value.push_back(content.substr(pos + key.length(), idx - (pos + key.length())));
+        pos = idx + 1;
+        http.data()[http.size() - 1][category].insert(std::make_pair(key, value));
+        i = 0;
+    }
+    return TRUE;
+}
+
+int serverConf::isValidServer(std::string content)
+{
+    size_t i = 0;
+    size_t pos = 0;
+    size_t idx = 0;
+    size_t j = 0;
+    std::string key = "";
+    std::string category = "";
+
+    while (pos != content.length())
+    {
+        category = "";
+        while (i < server_ids.size())
+        {
+            if (content.find(server_ids[i], pos) != std::string::npos && isspace(content.at(content.find(server_ids[i], pos) + server_ids[i].length())))
+            {
+                if (http.data()[http.size() - 1]["server"][server_ids[i]].empty())
+                {
+                    pos = content.find(server_ids[i], pos);
+                    category = "server";
+                    key = server_ids[i];
+                    break ;
+                }
+            }
+            i++;
+        }
+        while (pos + j < content.length() && isspace(content.at(pos + j)))
+            j++;
+        if (pos + j == content.length())
+            return TRUE;
+        else if (content.find(";", pos) != std::string::npos)
+            idx = content.find(";", pos);
+        else
+            return FALSE;
+        std::vector< std::string > value;
+        std::string raw_content = content.substr(pos + key.length(), idx - (pos + key.length()));
+        std::string trim_content = raw_content.substr(raw_content.find_first_not_of("\t\n\r\v\f "), raw_content.length() - raw_content.find_first_not_of("\t\n\r\v\f "));
+        std::cout << "category = " << category << std::endl;
+        std::cout << "key = " << key << std::endl;
+        std::cout << "content = " << trim_content << std::endl;
+        value.push_back(content.substr(pos + key.length(), idx - (pos + key.length())));
+        pos = idx + 1;
+        http.data()[http.size() - 1][category].insert(std::make_pair(key, value));
+        i = 0;
+    }
+    return TRUE;
+}
+
 int serverConf::setIds(std::string content)
 {
     (void)content;
@@ -197,23 +293,32 @@ int serverConf::parseContent(std::string content)
         posEnd--;
     }
     size_t server_idx = 0;
-    std::string block;
+    std::string blockServer = "";
+    std::string blockLocation = "";
+    size_t location_idx = 0;
     while (server_idx != content.length())
     {
         if (content.find("server", server_idx) != std::string::npos)
         {
             server_idx = content.find("server", server_idx);
             if (content.find("{", server_idx) != std::string::npos)
-                block = getBlock(&content[content.find("{", server_idx) + 1]);
-            std::cout << "block => " << block << std::endl;
+                blockServer = getBlock(&content[content.find("{", server_idx) + 1]);
+            std::cout << "block ser => " << blockServer << std::endl;
+            if (setValues(blockServer) == FALSE)
+                return FALSE;
+            if (isValidServer(blockServer) == FALSE)
+                return FALSE;
+            while (content.find("location", location_idx))
             {
-                if (setValues(block) == FALSE)
+                if (content.find("{", location_idx) != std::string::npos)
+                    blockLocation = getBlock(&content[content.find("{", location_idx) + 1]);
+                std::cout << "block loc => " << blockLocation << std::endl;
+                if (isValidLocation(blockLocation) == FALSE)
                     return FALSE;
-                if (isValid(block) == FALSE)
-                    return FALSE;
-            }  
+                location_idx += content.find("{", location_idx) + blockLocation.length();
+            }
         }
-        server_idx += content.find("{", server_idx) + block.length();
+        server_idx += content.find("{", server_idx) + blockServer.length();
     }
     return TRUE;
 }
@@ -239,6 +344,11 @@ int main(void)
     conf.location_ids.push_back("cgi");
     conf.location_ids.push_back("redirect");
     conf.location_ids.push_back("return");
+    /*conf.location_ids.push_back("try_files");
+    conf.location_ids.push_back("proxy_set_header");
+    conf.location_ids.push_back("proxy_buffers");
+    conf.location_ids.push_back("proxy_buffer_size");
+    conf.location_ids.push_back("proxy_pass");*/
     std::string file = "conf_example_copy.conf";
     std::string output = "";
     output += getContent(file);

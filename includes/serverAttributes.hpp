@@ -5,30 +5,32 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <cctype>
+#include <cstring>
+#include <map>
+#include <utility>
+#include "unistd.h"
 
 #define TRUE 1
 #define FALSE 0
 
-struct locations
-{
-    std::string index;
-    std::vector< std::string > methods;
-    bool autoIndex;
-    std::string upload_dir;
-    std::string cgi;
-    std::string redirect;
-};
-
-class serverConf : public locations
+class serverConf
 {
     public:
-        int listen;
-        std::string server_name;
-        int clientMaxBodySize;
-        std::string errorPages;
-        std::vector< locations > location;
-        serverConf();
-        virtual ~serverConf();
+        std::vector< std::string > location_ids;
+        std::vector< std::string > general;
+        std::vector< std::string > server_ids;
+        std::vector< std::map< std::string, std::map< std::string, std::vector< std::string > > > > http; // < server, location >
+        serverConf() {}
+        serverConf(serverConf const & rhs) : location_ids(std::vector< std::string >(rhs.location_ids)), general(std::vector< std::string >(rhs.general)), http(std::vector< std::map< std::string, std::map< std::string, std::vector< std::string > > > >(rhs.http)) {}
+        serverConf operator=(serverConf & rhs) { location_ids = std::vector< std::string >(rhs.location_ids); general = std::vector< std::string >(rhs.general); http = std::vector< std::map< std::string, std::map< std::string, std::vector< std::string > > > >(rhs.http); return *this; }
+        virtual ~serverConf() {}
+        int parseContent(std::string content);
+        void pushServerIds(std::map< std::string, std::vector< std::string > > server);
+        void pushLocationIds(std::map< std::string, std::vector< std::string > > location);
+        int isValid(std::string content);
+        int setIds(std::string content);
+        int setValues(std::string content);
 };
 
 #endif

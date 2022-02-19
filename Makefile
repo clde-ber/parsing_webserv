@@ -4,7 +4,7 @@ NAME	=	Zombie
 LIST	=	serverAttributes \
 
 HEADER	=	-I includes/
-CFLAGS	=	-Wall -Wextra -Werror -MMD -std=c++98
+CFLAGS	=	-Wall -Wextra -Werror -MMD -std=c++98 -g3 -fsanitize=address
 CC		=	clang++
 
 S_DIR	=	srcs/

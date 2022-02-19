@@ -403,7 +403,6 @@ int main(void)
     serverConf conf;
     std::vector< std::string > empty;
 
-    conf.server_ids.push_back("location");
     conf.server_ids.push_back("listen");
     conf.server_ids.push_back("server_name");
     conf.server_ids.push_back("client_max_body_size");
@@ -411,6 +410,7 @@ int main(void)
     conf.server_ids.push_back("root");
     conf.server_ids.push_back("index");
     conf.server_ids.push_back("return");
+    conf.server_ids.push_back("location");
     conf.location_ids.push_back("root");
     conf.location_ids.push_back("index");
     conf.location_ids.push_back("methods");

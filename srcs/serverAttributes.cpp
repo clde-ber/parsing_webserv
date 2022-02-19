@@ -100,6 +100,7 @@ int serverConf::isValid(std::string content)
     size_t i = 0;
     size_t pos = 0;
     size_t idx = 0;
+    size_t j = 0;
     std::string key = "";
     std::string category = "";
 
@@ -112,7 +113,7 @@ int serverConf::isValid(std::string content)
             {
                 if (http.data()[http.size() - 1]["server"][server_ids[i]].empty())
                 {
-                    pos = content.find(server_ids[i], pos) + 1;
+                    pos = content.find(server_ids[i], pos);
                     category = "server";
                     key = server_ids[i];
                     break ;
@@ -127,7 +128,7 @@ int serverConf::isValid(std::string content)
             {
                 if (http.data()[http.size() - 1]["location"][location_ids[i]].empty())
                 {
-                    pos = content.find(location_ids[i], pos) + 1;
+                    pos = content.find(location_ids[i], pos);
                     category = "location";
                     key = location_ids[i];
                     break ;
@@ -135,21 +136,18 @@ int serverConf::isValid(std::string content)
             }
             i++;
         }
-        if (key != "location" && content.find(";", pos) != std::string::npos)
+        while (pos + j < content.length() && isspace(content.at(pos + j)))
+            j++;
+        if (pos + j == content.length())
+            return TRUE;
+        else if (content.find(";", pos) != std::string::npos)
             idx = content.find(";", pos);
-        else if (content.find("{", pos) != std::string::npos)
-            idx = content.find("{", pos);
         else
             return FALSE;
-        if ((key != "location" && idx == std::string::npos) || (key == "location" && idx == std::string::npos))
-        {
-            std::cout << "error2" << std::endl;
-            write(1, "error2", strlen("error2"));
-            return FALSE;
-        }
         std::vector< std::string > value;
         std::string raw_content = content.substr(pos + key.length(), idx - (pos + key.length()));
         std::string trim_content = raw_content.substr(raw_content.find_first_not_of("\t\n\r\v\f "), raw_content.length() - raw_content.find_first_not_of("\t\n\r\v\f "));
+        std::cout << "category = " << category << std::endl;
         std::cout << "key = " << key << std::endl;
         std::cout << "content = " << trim_content << std::endl;
         value.push_back(content.substr(pos + key.length(), idx - (pos + key.length())));
@@ -200,25 +198,22 @@ int serverConf::parseContent(std::string content)
     }
     size_t server_idx = 0;
     std::string block;
-    if (server_idx != content.length())
+    while (server_idx != content.length())
     {
-        if ((server_idx = content.find("server", server_idx)) != std::string::npos)
+        if (content.find("server", server_idx) != std::string::npos)
         {
-            block = getBlock(&content[content.find("{", server_idx) + 1]);
+            server_idx = content.find("server", server_idx);
+            if (content.find("{", server_idx) != std::string::npos)
+                block = getBlock(&content[content.find("{", server_idx) + 1]);
             std::cout << "block => " << block << std::endl;
             {
                 if (setValues(block) == FALSE)
-                {
-                    std::cout << "error1" << std::endl;
                     return FALSE;
-                }
                 if (isValid(block) == FALSE)
                     return FALSE;
             }  
         }
-        std::cout << "********content : " << content.substr(posStart, content.length() - posStart) << "********" << std::endl;
-        std::cout << "fail2" << std::endl;
-        return FALSE;
+        server_idx += content.find("{", server_idx) + block.length();
     }
     return TRUE;
 }

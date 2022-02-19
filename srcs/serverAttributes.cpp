@@ -32,11 +32,14 @@ std::string getContent(std::string file)
 
 void serverConf::pushServerIds(std::map< std::string, std::vector< std::string > > server)
 {
+    server.insert(std::pair< std::string, std::vector< std::string > >("location", std::vector< std::string >()));
     server.insert(std::pair< std::string, std::vector< std::string > >("listen", std::vector< std::string >()));
     server.insert(std::pair< std::string, std::vector< std::string > >("server_name", std::vector< std::string >()));
     server.insert(std::pair< std::string, std::vector< std::string > >("client_max_body_size", std::vector< std::string >()));
     server.insert(std::pair< std::string, std::vector< std::string > >("error_pages", std::vector< std::string >()));
     server.insert(std::pair< std::string, std::vector< std::string > >("root", std::vector< std::string >()));
+    server.insert(std::pair< std::string, std::vector< std::string > >("index", std::vector< std::string >()));
+    server.insert(std::pair< std::string, std::vector< std::string > >("return", std::vector< std::string >()));
 }
 
 void serverConf::pushLocationIds(std::map< std::string, std::vector< std::string > > location)
@@ -48,6 +51,12 @@ void serverConf::pushLocationIds(std::map< std::string, std::vector< std::string
     location.insert(std::pair< std::string, std::vector< std::string > >("upload_dir", std::vector< std::string >()));
     location.insert(std::pair< std::string, std::vector< std::string > >("cgi", std::vector< std::string >()));
     location.insert(std::pair< std::string, std::vector< std::string > >("redirect", std::vector< std::string >()));
+    location.insert(std::pair< std::string, std::vector< std::string > >("return", std::vector< std::string >()));
+    location.insert(std::pair< std::string, std::vector< std::string > >("try_files", std::vector< std::string >()));
+    location.insert(std::pair< std::string, std::vector< std::string > >("proxy_set_headers", std::vector< std::string >()));
+    location.insert(std::pair< std::string, std::vector< std::string > >("proxy_buffers", std::vector< std::string >()));
+    location.insert(std::pair< std::string, std::vector< std::string > >("proxy_buffer_size", std::vector< std::string >()));
+    location.insert(std::pair< std::string, std::vector< std::string > >("proxy_pass", std::vector< std::string >()));
 }
 
 int serverConf::isValidLocation(std::string content)
@@ -59,27 +68,9 @@ int serverConf::isValidLocation(std::string content)
     std::string key = "";
     std::string category = "";
 
-    if ((pos = content.find("{", 0)) == std::string::npos)  
-        return FALSE;
-    while (pos + j < content.length() && isspace(content.at(pos + j)))
-        j++;
-    if (pos + j == content.length())
-        return TRUE;
-    else if (content.find(";", pos) != std::string::npos)
-        idx = content.find(";", pos);
-    else
-        return FALSE;
-    std::vector< std::string > value;
-    std::string raw_content = content.substr(pos + 9, idx - (pos + 9));
-    std::string trim_content = raw_content.substr(raw_content.find_first_not_of("\t\n\r\v\f "), raw_content.length() - raw_content.find_first_not_of("\t\n\r\v\f "));
-    std::cout << "category = " << category << std::endl;
-    std::cout << "key = " << key << std::endl;
-    std::cout << "content = " << trim_content << std::endl;
-    value.push_back(content.substr(pos + 9, idx - (pos + 9)));
-    pos = idx + 1;
-    j = 0;
     while (pos != content.length())
     {
+        i = 0;
         while (i < location_ids.size())
         {
             if (content.find(location_ids[i], pos) != std::string::npos && isspace(content.at(content.find(location_ids[i], pos) + location_ids[i].length())))
@@ -124,14 +115,33 @@ int serverConf::isValidServer(std::string content)
     size_t j = 0;
     std::string key = "";
     std::string category = "";
+    std::string blockLocation = "";
+    bool is_location = 0;
 
     while (pos != content.length())
     {
+        i = 0;
         while (i < server_ids.size())
         {
+            is_location = 0;
+            std::cout << std::endl;
+            std::cout << "SERVER ID" << server_ids[i] << std::endl;
+            std::cout << std::endl;
+            std::cout << "remaining content : " << &content[pos] << std::endl;
             if (content.find(server_ids[i], pos) != std::string::npos && isspace(content.at(content.find(server_ids[i], pos) + server_ids[i].length())))
             {
-                if (http.data()[http.size() - 1]["server"][server_ids[i]].empty())
+                if (server_ids[i] == "location")
+                {
+                    if (content.find("{", pos) != std::string::npos)
+                        blockLocation = getBlockLocation(&content[content.find("{", pos) + 1]);
+                    std::cout << "block loc => " << blockLocation << std::endl;
+                    if (isValidLocation(blockLocation) == FALSE)
+                        return FALSE;
+                    pos = content.find("}", pos) + 1;
+                    is_location = 1;
+                    break ;
+                }
+                else if (http.data()[http.size() - 1]["server"][server_ids[i]].empty())
                 {
                     pos = content.find(server_ids[i], pos);
                     category = "server";
@@ -141,6 +151,8 @@ int serverConf::isValidServer(std::string content)
             }
             i++;
         }
+        if (is_location == 0)
+        {
         while (pos + j < content.length() && isspace(content.at(pos + j)))
             j++;
         if (pos + j == content.length())
@@ -159,6 +171,7 @@ int serverConf::isValidServer(std::string content)
         pos = idx + 1;
         http.data()[http.size() - 1][category].insert(std::make_pair(key, value));
         i = 0;
+        }
     }
     return TRUE;
 }
@@ -271,7 +284,7 @@ int serverConf::isValid(std::string content)
     return TRUE;
 }
 
-std::string serverConf::getBlock(std::string content)
+std::string serverConf::getBlockServer(std::string content)
 {
     size_t i = 0;
     size_t count1 = 0;
@@ -284,6 +297,19 @@ std::string serverConf::getBlock(std::string content)
         if (content.at(i) == '}')
             count2++;
         if (count2 > count1)
+            return content.substr(0, i);
+        i++;
+    }
+    return content.substr(0, i);
+}
+
+std::string serverConf::getBlockLocation(std::string content)
+{
+    size_t i = 0;
+
+    while (i < content.length())
+    {
+        if (content.at(i) == '}')
             return content.substr(0, i);
         i++;
     }
@@ -319,21 +345,22 @@ int serverConf::parseContent(std::string content)
         {
             server_idx = content.find("server", server_idx);
             if (content.find("{", server_idx) != std::string::npos)
-                blockServer = getBlock(&content[content.find("{", server_idx) + 1]);
+                blockServer = getBlockServer(&content[content.find("{", server_idx) + 1]);
             std::cout << "block ser => " << blockServer << std::endl;
             if (setValues(blockServer) == FALSE)
                 return FALSE;
             if (isValidServer(blockServer) == FALSE)
                 return FALSE;
-            while (blockServer.find("location", location_idx) != std::string::npos)
+            //location_idx = server_idx;
+            /*while (blockServer.find("location", location_idx) != std::string::npos && isspace(blockServer.at(blockServer.find("location", location_idx) + 9)))
             {
                 if (blockServer.find("{", location_idx) != std::string::npos)
-                    blockLocation = getBlock(&blockServer[blockServer.find("{", location_idx) + 1]);
+                    blockLocation = getBlockLocation(&blockServer[blockServer.find("{", location_idx) + 1]);
                 std::cout << "block loc => " << blockLocation << std::endl;
                 if (isValidLocation(blockLocation) == FALSE)
                     return FALSE;
                 location_idx += blockServer.find("{", location_idx) + blockLocation.length();
-            }
+            }*/
         }
         server_idx += content.find("{", server_idx) + location_idx;
     }
@@ -345,6 +372,7 @@ int main(void)
     serverConf conf;
     std::vector< std::string > empty;
 
+    conf.server_ids.push_back("location");
     conf.server_ids.push_back("listen");
     conf.server_ids.push_back("server_name");
     conf.server_ids.push_back("client_max_body_size");
@@ -352,7 +380,6 @@ int main(void)
     conf.server_ids.push_back("root");
     conf.server_ids.push_back("index");
     conf.server_ids.push_back("return");
-    conf.location_ids.push_back("location");
     conf.location_ids.push_back("root");
     conf.location_ids.push_back("index");
     conf.location_ids.push_back("methods");

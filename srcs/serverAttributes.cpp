@@ -59,6 +59,25 @@ int serverConf::isValidLocation(std::string content)
     std::string key = "";
     std::string category = "";
 
+    if ((pos = content.find("{", 0)) == std::string::npos)  
+        return FALSE;
+    while (pos + j < content.length() && isspace(content.at(pos + j)))
+        j++;
+    if (pos + j == content.length())
+        return TRUE;
+    else if (content.find(";", pos) != std::string::npos)
+        idx = content.find(";", pos);
+    else
+        return FALSE;
+    std::vector< std::string > value;
+    std::string raw_content = content.substr(pos + 9, idx - (pos + 9));
+    std::string trim_content = raw_content.substr(raw_content.find_first_not_of("\t\n\r\v\f "), raw_content.length() - raw_content.find_first_not_of("\t\n\r\v\f "));
+    std::cout << "category = " << category << std::endl;
+    std::cout << "key = " << key << std::endl;
+    std::cout << "content = " << trim_content << std::endl;
+    value.push_back(content.substr(pos + 9, idx - (pos + 9)));
+    pos = idx + 1;
+    j = 0;
     while (pos != content.length())
     {
         while (i < location_ids.size())
@@ -306,17 +325,17 @@ int serverConf::parseContent(std::string content)
                 return FALSE;
             if (isValidServer(blockServer) == FALSE)
                 return FALSE;
-            while (content.find("location", location_idx))
+            while (blockServer.find("location", location_idx) != std::string::npos)
             {
-                if (content.find("{", location_idx) != std::string::npos)
-                    blockLocation = getBlock(&content[content.find("{", location_idx) + 1]);
+                if (blockServer.find("{", location_idx) != std::string::npos)
+                    blockLocation = getBlock(&blockServer[blockServer.find("{", location_idx) + 1]);
                 std::cout << "block loc => " << blockLocation << std::endl;
                 if (isValidLocation(blockLocation) == FALSE)
                     return FALSE;
-                location_idx += content.find("{", location_idx) + blockLocation.length();
+                location_idx += blockServer.find("{", location_idx) + blockLocation.length();
             }
         }
-        server_idx += content.find("{", server_idx) + blockServer.length();
+        server_idx += content.find("{", server_idx) + location_idx;
     }
     return TRUE;
 }
@@ -342,11 +361,11 @@ int main(void)
     conf.location_ids.push_back("cgi");
     conf.location_ids.push_back("redirect");
     conf.location_ids.push_back("return");
-    /*conf.location_ids.push_back("try_files");
+    conf.location_ids.push_back("try_files");
     conf.location_ids.push_back("proxy_set_header");
     conf.location_ids.push_back("proxy_buffers");
     conf.location_ids.push_back("proxy_buffer_size");
-    conf.location_ids.push_back("proxy_pass");*/
+    conf.location_ids.push_back("proxy_pass");
     std::string file = "conf_example_copy.conf";
     std::string output = "";
     output += getContent(file);

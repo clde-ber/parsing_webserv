@@ -105,14 +105,10 @@ int serverConf::isValid(std::string content)
 
     while (pos != content.length())
     {
-        if (setValues(content) == FALSE)
-        {
-            std::cout << "error1" << std::endl;
-            return FALSE;
-        }
+        category = "";
         while (i < server_ids.size())
         {
-            if (content.find(server_ids[i], pos) != std::string::npos)
+            if (content.find(server_ids[i], pos) != std::string::npos && isspace(content.at(content.find(server_ids[i], pos) + server_ids[i].length())))
             {
                 if (http.data()[http.size() - 1]["server"][server_ids[i]].empty())
                 {
@@ -127,7 +123,7 @@ int serverConf::isValid(std::string content)
         i = 0;
         while (category == "" && i < location_ids.size())
         {
-            if (content.find(location_ids[i], pos) != std::string::npos)
+            if (content.find(location_ids[i], pos) != std::string::npos && isspace(content.at(content.find(location_ids[i], pos) + location_ids[i].length())))
             {
                 if (http.data()[http.size() - 1]["location"][location_ids[i]].empty())
                 {
@@ -164,6 +160,25 @@ int serverConf::isValid(std::string content)
     return TRUE;
 }
 
+std::string serverConf::getBlock(std::string content)
+{
+    size_t i = 0;
+    size_t count1 = 0;
+    size_t count2 = 0;
+
+    while (i < content.length())
+    {
+        if (content.at(i) == '{')
+            count1++;
+        if (content.at(i) == '}')
+            count2++;
+        if (count2 > count1)
+            return content.substr(0, i);
+        i++;
+    }
+    return content.substr(0, i);
+}
+
 int serverConf::parseContent(std::string content)
 {
     size_t posStart = 0;
@@ -183,8 +198,24 @@ int serverConf::parseContent(std::string content)
         posStart++;
         posEnd--;
     }
-    if (isValid(content) == FALSE)
+    size_t server_idx = 0;
+    std::string block;
+    if (server_idx != content.length())
     {
+        if ((server_idx = content.find("server", server_idx)) != std::string::npos)
+        {
+            block = getBlock(&content[content.find("{", server_idx) + 1]);
+            std::cout << "block => " << block << std::endl;
+            {
+                if (setValues(block) == FALSE)
+                {
+                    std::cout << "error1" << std::endl;
+                    return FALSE;
+                }
+                if (isValid(block) == FALSE)
+                    return FALSE;
+            }  
+        }
         std::cout << "********content : " << content.substr(posStart, content.length() - posStart) << "********" << std::endl;
         std::cout << "fail2" << std::endl;
         return FALSE;
@@ -202,6 +233,8 @@ int main(void)
     conf.server_ids.push_back("client_max_body_size");
     conf.server_ids.push_back("error_pages");
     conf.server_ids.push_back("root");
+    conf.server_ids.push_back("index");
+    conf.server_ids.push_back("return");
     conf.location_ids.push_back("location");
     conf.location_ids.push_back("root");
     conf.location_ids.push_back("index");

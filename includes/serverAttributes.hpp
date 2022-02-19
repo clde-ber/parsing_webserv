@@ -31,6 +31,7 @@ class serverConf
         int isValid(std::string content);
         int setIds(std::string content);
         int setValues(std::string content);
+        std::string getBlock(std::string content);
 };
 
 #endif

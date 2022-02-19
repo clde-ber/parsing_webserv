@@ -102,6 +102,7 @@ int serverConf::isValid(std::string content)
     size_t idx = 0;
     std::string key = "";
     std::string category = "";
+
     while (pos != content.length())
     {
         if (setValues(content) == FALSE)
@@ -114,11 +115,14 @@ int serverConf::isValid(std::string content)
         {
             if (content.find(server_ids[i], pos) != std::string::npos)
             {
-                pos = content.find(server_ids[i], pos) + 1;
-                std::cout << "server_ids[i]" << server_ids[i] << std::endl;
-                category = "server";
-                key = server_ids[i];
-                break ;
+                if (http.data()[http.size() - 1]["server"][server_ids[i]].empty())
+                {
+                    pos = content.find(server_ids[i], pos) + 1;
+                    std::cout << "server_ids[i]" << server_ids[i] << std::endl;
+                    category = "server";
+                    key = server_ids[i];
+                    break ;
+                }
             }
             i++;
         }
@@ -128,11 +132,14 @@ int serverConf::isValid(std::string content)
         {
             if (content.find(location_ids[i], pos) != std::string::npos)
             {
-                pos = content.find(location_ids[i], pos) + 1;
-                std::cout << "location_ids[i]" << location_ids[i] << std::endl;
-                category = "location";
-                key = location_ids[i];
-                break ;
+                if (http.data()[http.size() - 1]["location"][location_ids[i]].empty())
+                {
+                    pos = content.find(location_ids[i], pos) + 1;
+                    std::cout << "location_ids[i]" << location_ids[i] << std::endl;
+                    category = "location";
+                    key = location_ids[i];
+                    break ;
+                }
             }
             i++;
         }
@@ -163,6 +170,8 @@ int serverConf::isValid(std::string content)
         std::cout << "pos after" << pos << std::endl;
         std::cout << "http size" << http.size() << std::endl;
         http.data()[http.size() - 1][category].insert(std::make_pair(key, value));
+        std::cout << "empty server: " << http.data()[http.size() - 1]["server"][key].empty() << std::endl;
+        std::cout << "empty location: " << http.data()[http.size() - 1]["location"][key].empty() << std::endl;
         std::cout << "content at pos" << content.at(pos) << std::endl;
         i = 0;
     }

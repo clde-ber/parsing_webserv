@@ -110,7 +110,6 @@ int serverConf::isValid(std::string content)
             std::cout << "error1" << std::endl;
             return FALSE;
         }
-        std::cout << "server ids size()" << server_ids.size() << std::endl;
         while (i < server_ids.size())
         {
             if (content.find(server_ids[i], pos) != std::string::npos)
@@ -118,7 +117,6 @@ int serverConf::isValid(std::string content)
                 if (http.data()[http.size() - 1]["server"][server_ids[i]].empty())
                 {
                     pos = content.find(server_ids[i], pos) + 1;
-                    std::cout << "server_ids[i]" << server_ids[i] << std::endl;
                     category = "server";
                     key = server_ids[i];
                     break ;
@@ -127,7 +125,6 @@ int serverConf::isValid(std::string content)
             i++;
         }
         i = 0;
-        std::cout << "location ids size()" << location_ids.size() << std::endl;
         while (category == "" && i < location_ids.size())
         {
             if (content.find(location_ids[i], pos) != std::string::npos)
@@ -135,7 +132,6 @@ int serverConf::isValid(std::string content)
                 if (http.data()[http.size() - 1]["location"][location_ids[i]].empty())
                 {
                     pos = content.find(location_ids[i], pos) + 1;
-                    std::cout << "location_ids[i]" << location_ids[i] << std::endl;
                     category = "location";
                     key = location_ids[i];
                     break ;
@@ -143,8 +139,6 @@ int serverConf::isValid(std::string content)
             }
             i++;
         }
-        std::cout << "KEY " << key << std::endl;
-        std::cout << "CATEGORY" << category << std::endl;
         if (key != "location" && content.find(";", pos) != std::string::npos)
             idx = content.find(";", pos);
         else if (content.find("{", pos) != std::string::npos)
@@ -157,22 +151,14 @@ int serverConf::isValid(std::string content)
             write(1, "error2", strlen("error2"));
             return FALSE;
         }
-        std::cout << "len!" << idx << std::endl;
-        std::cout << "pos!" << pos << std::endl;
-        std::cout << "pos of content" << pos + key.length() << std::endl;
         std::vector< std::string > value;
         std::string raw_content = content.substr(pos + key.length(), idx - (pos + key.length()));
-        std::cout << "raw_content" << raw_content << std::endl;
         std::string trim_content = raw_content.substr(raw_content.find_first_not_of("\t\n\r\v\f "), raw_content.length() - raw_content.find_first_not_of("\t\n\r\v\f "));
-        std::cout << "content = " << trim_content << "&" << std::endl;
+        std::cout << "key = " << key << std::endl;
+        std::cout << "content = " << trim_content << std::endl;
         value.push_back(content.substr(pos + key.length(), idx - (pos + key.length())));
         pos = idx + 1;
-        std::cout << "pos after" << pos << std::endl;
-        std::cout << "http size" << http.size() << std::endl;
         http.data()[http.size() - 1][category].insert(std::make_pair(key, value));
-        std::cout << "empty server: " << http.data()[http.size() - 1]["server"][key].empty() << std::endl;
-        std::cout << "empty location: " << http.data()[http.size() - 1]["location"][key].empty() << std::endl;
-        std::cout << "content at pos" << content.at(pos) << std::endl;
         i = 0;
     }
     return TRUE;

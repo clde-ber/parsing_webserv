@@ -45,10 +45,39 @@ Reading 812 characters... all characters read successfully.http {
 	}
 }
 bool is valid : id_keylisten
-id_keyserver_name
-id_keylocation
-location name  / 
-location name  /*
+CONTEEEEEEENTlisten      			8080;
+		server_name				default_server;
+		location / {
+			root					directory;
+			default					index.html;
+			upload					upload;
+			dirList					OFF;
+		}
+		location /files/get/ {
+			root					directory;
+			method					GET;
+		}
+        error_page 404          directory/custom_error/404.html;
+		client_max_body_size	1000000;
+		cgi						.cgi .php .py;
+	id_keyserver_name
+CONTEEEEEEENTserver_name				default_server;
+		location / {
+			root					directory;
+			default					index.html;
+			upload					upload;
+			dirList					OFF;
+		}
+		location /files/get/ {
+			root					directory;
+			method					GET;
+		}
+        error_page 404          directory/custom_error/404.html;
+		client_max_body_size	1000000;
+		cgi						.cgi .php .py;
+	id_keylocation
+location name  / *
+location name /*
 BLOCKLOCATION
 			root					directory;
 			default					index.html;
@@ -56,82 +85,38 @@ BLOCKLOCATION
 			dirList					OFF;
 		
 id_keylocation
-location name  / 
-location name  /*
+location name  /files/get/ *
+location name /files/get/*
 BLOCKLOCATION
 			root					directory;
 			method					GET;
 		
 id_keyerror_page
-id_keyclient_max_body_size
-id_keycgi
-id_keycgi
-id_keyroot
-id_keyroot
-id_keyroot
-id_keyroot
-id_keyroot
-2 heyla
-ici
-0
-indice : [0]
-*************
-serveur : 
-clé : [listen] | valeur [0] : 8080
-clé : [server_name] | valeur [0] : default_server
-*************
-location : 
-*************
-
-indice : [1]
-*************
-serveur : 
-*************
-location : 
-clé : [root] | valeur [0] : directory
-clé : [index]
-clé : [methods]
-clé : [autoindex]
-clé : [upload_dir]
-clé : [cgi]
-clé : [redirect]
-clé : [return]
-clé : [try_files]
-clé : [proxy_set_header]
-clé : [proxy_buffers]
-clé : [proxy_buffer_size]
-clé : [proxy_pass]
-clé : [method]
-clé : [default] | valeur [0] : index.html
-clé : [upload] | valeur [0] : upload
-clé : [dirList] | valeur [0] : OFF
-*************
-
-indice : [2]
-*************
-serveur : 
-*************
-location : 
-clé : [root] | valeur [0] : directory
-clé : [index]
-clé : [methods]
-clé : [autoindex]
-clé : [upload_dir]
-clé : [cgi]
-clé : [redirect]
-clé : [return]
-clé : [try_files]
-clé : [proxy_set_header]
-clé : [proxy_buffers]
-clé : [proxy_buffer_size]
-clé : [proxy_pass]
-clé : [method] | valeur [0] : GET
-*************
-
-indice : [3]
-*************
-serveur : 
-*************
-location : 
-*************
-
+CONTEEEEEEENTerror_page 404          directory/custom_error/404.html;
+		client_max_body_size	1000000;
+		cgi						.cgi .php .py;
+	id_keyclient_max_body_size
+CONTEEEEEEENTclient_max_body_size	1000000;
+		cgi						.cgi .php .py;
+	id_keycgi
+CONTEEEEEEENTcgi						.cgi .php .py;
+	id_keycgi
+CONTEEEEEEENT
+	id_keyroot
+CONTEEEEEEENTroot					directory;
+			default					index.html;
+			upload					upload;
+			dirList					OFF;
+		id_keyroot
+CONTEEEEEEENT
+			default					index.html;
+			upload					upload;
+			dirList					OFF;
+		id_keyroot
+CONTEEEEEEENT
+			upload					upload;
+			dirList					OFF;
+		id_keyroot
+CONTEEEEEEENT
+			dirList					OFF;
+		id_keyroot

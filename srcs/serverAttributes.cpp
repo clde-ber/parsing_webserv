@@ -155,9 +155,9 @@ int serverConf::isValidServer(std::string content)
         std::cout << "id_key" << id_key << std::endl;
         if (id_key == "location")
         {
-            location_name = content.substr(content.find(id_key) + id_key.length(), content.substr(content.find(id_key) + id_key.length()).find("{", 0));
-            std::cout << "location name " << location_name << std::endl;
-            location_name = location_name.substr(location_name.find_first_of("\t\n\r\v\f "), location_name.find_last_of("\t\n\r\v\f "));
+            location_name = content.substr(content.find(id_key, pos) + id_key.length(), content.substr(content.find(id_key, pos) + id_key.length()).find("{", 0));
+            std::cout << "location name " << location_name << "*" << std::endl;
+            location_name = location_name.substr(location_name.find_first_not_of("\t\n\r\v\f "), location_name.find_last_not_of("\t\n\r\v\f "));
             std::cout << "location name " << location_name << "*" << std::endl;
             setLocationId(location_name);
             if (content.find("{", pos) != std::string::npos)
@@ -181,7 +181,8 @@ int serverConf::isValidServer(std::string content)
         {
         while (pos + j < content.length() && isspace(content.at(pos + j)))
             j++;
-        if (pos + j == content.length())
+        std::cout << "CONTEEEEEEENT" << &content[pos];
+        if (pos + j == content.length() || !content.at(pos + j))
             return TRUE;
         else if (content.find(";", pos) != std::string::npos)
             idx = content.find(";", pos);

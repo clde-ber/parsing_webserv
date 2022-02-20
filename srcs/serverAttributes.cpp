@@ -189,19 +189,38 @@ int serverConf::isValidServer(std::string content)
                 return FALSE;
             }
             std::cout << "BLOCKLOCATION" << blockLocation <<  std::endl;
-            pos = content.find("}", pos) + 1;
+            if (content.find("}", pos) != std::string::npos)
+                pos = content.find("}", pos) + 1;
+            std::cout << "CONTENT = " << &content[pos] << std::endl;
+            while (pos + j < content.length() && isspace(content.at(pos + j)))
+            {
+                std::cout << "posat pos + j " << content.at(pos + j);
+                j++;
+            }
             is_location = 1;
+            if (pos + j == content.length())
+                return TRUE;
+            j = 0;
         }
         else
         {
-            pos = content.find(id_key, pos);
+            if (content.find(id_key, pos) != std::string::npos)
+                pos = content.find(id_key, pos);
             category = "server";
             key = id_key;
         }
         if (is_location == 0)
         {
+            std::cout << "pos" << pos << std::endl;
+            std::cout << "j" << j << std::endl;
+            std::cout << "&content[pos + j] " << content.substr(pos + j, content.length() - (pos + j)) << std::endl;
         while (pos + j < content.length() && isspace(content.at(pos + j)))
+        {
+            std::cout << "posat pos + j " << content.at(pos + j);
             j++;
+        }
+        //std::cout << "pos + j" << pos + j << std::endl;
+        std::cout << "content length" << content.length() << std::endl;
         if (pos + j == content.length())
             return TRUE;
         else if (content.find(";", pos) != std::string::npos)
@@ -383,14 +402,15 @@ int serverConf::parseContent(std::string content)
     size_t server_idx = 0;
     std::string blockServer = "";
     std::string blockLocation = "";
-    size_t location_idx = 0;
     while (server_idx != content.length())
     {
-        if (content.find("server", server_idx) != std::string::npos)
+        if ((server_idx = content.find("server", server_idx)) != std::string::npos)
         {
-            server_idx = content.find("server", server_idx);
-            if (content.find("{", server_idx) != std::string::npos)
-                blockServer = getBlockServer(&content[content.find("{", server_idx) + 1]);
+            //server_idx = content.find("server", server_idx);
+            if (content.find("{", server_idx + 7) != std::string::npos)
+                blockServer = getBlockServer(&content[content.find("{", server_idx + 7) + 1]);
+            //server_idx = content.find(blockServer, server_idx) + blockServer.length();
+            server_idx = content.find("{", server_idx + 7) + blockServer.length();
             if (setValues(blockServer) == FALSE)
                 return FALSE;
             if (isValidServer(blockServer) == FALSE)
@@ -398,6 +418,7 @@ int serverConf::parseContent(std::string content)
                 std::cout << "ici" << std::endl;
                 return FALSE;
             }
+            std::cout << "BLOCKSERVER *********" << blockServer << std::endl;
             //location_idx = server_idx;
             /*while (blockServer.find("location", location_idx) != std::string::npos && isspace(blockServer.at(blockServer.find("location", location_idx) + 9)))
             {
@@ -409,7 +430,8 @@ int serverConf::parseContent(std::string content)
                 location_idx += blockServer.find("{", location_idx) + blockLocation.length();
             }*/
         }
-        server_idx += content.find("{", server_idx) + location_idx;
+        else
+            return TRUE;
     }
     return TRUE;
 }

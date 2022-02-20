@@ -45,7 +45,44 @@ Reading 812 characters... all characters read successfully.http {
 	}
 }
 bool is valid : id_key!!!!!!!!!!!!!!!listen
+pos3
+j0
+&content[pos + j] listen      			8080;
+		server_name				default_server;
+		location / {
+			root					directory;
+			default					index.html;
+			upload					upload;
+			dirList					OFF;
+		}
+		location /files/get/ {
+			root					directory;
+			method					GET;
+		}
+        error_page 404          directory/custom_error/404.html;
+		client_max_body_size	1000000;
+		cgi						.cgi .php .py;
+	
+content length363
 id_key!!!!!!!!!!!!!!!server_name
+pos26
+j0
+&content[pos + j] server_name				default_server;
+		location / {
+			root					directory;
+			default					index.html;
+			upload					upload;
+			dirList					OFF;
+		}
+		location /files/get/ {
+			root					directory;
+			method					GET;
+		}
+        error_page 404          directory/custom_error/404.html;
+		client_max_body_size	1000000;
+		cgi						.cgi .php .py;
+	
+content length363
 id_key!!!!!!!!!!!!!!!location
 location name /*
 pos + j 4
@@ -64,7 +101,17 @@ BLOCKLOCATION
 			upload					upload;
 			dirList					OFF;
 		
-id_key!!!!!!!!!!!!!!!location
+CONTENT = 
+		location /files/get/ {
+			root					directory;
+			method					GET;
+		}
+        error_page 404          directory/custom_error/404.html;
+		client_max_body_size	1000000;
+		cgi						.cgi .php .py;
+	
+posat pos + j 
+posat pos + j 	posat pos + j 	id_key!!!!!!!!!!!!!!!location
 location name /files/get/*
 pos + j 4
 content length 45
@@ -76,17 +123,212 @@ BLOCKLOCATION
 			root					directory;
 			method					GET;
 		
-id_key!!!!!!!!!!!!!!!error_page
+CONTENT = 
+        error_page 404          directory/custom_error/404.html;
+		client_max_body_size	1000000;
+		cgi						.cgi .php .py;
+	
+posat pos + j 
+posat pos + j  posat pos + j  posat pos + j  posat pos + j  posat pos + j  posat pos + j  posat pos + j  posat pos + j  id_key!!!!!!!!!!!!!!!error_page
+pos247
+j0
+&content[pos + j] error_page 404          directory/custom_error/404.html;
+		client_max_body_size	1000000;
+		cgi						.cgi .php .py;
+	
+content length363
 id_key!!!!!!!!!!!!!!!client_max_body_size
+pos306
+j0
+&content[pos + j] client_max_body_size	1000000;
+		cgi						.cgi .php .py;
+	
+content length363
 id_key!!!!!!!!!!!!!!!cgi
+pos338
+j0
+&content[pos + j] cgi						.cgi .php .py;
+	
+content length363
 id_key!!!!!!!!!!!!!!!cgi
-2 heyla
-ici
-0
+pos361
+j0
+&content[pos + j] 
+	
+posat pos + j 
+posat pos + j 	content length363
+BLOCKSERVER *********
+		listen      			8080;
+		server_name				default_server;
+		location / {
+			root					directory;
+			default					index.html;
+			upload					upload;
+			dirList					OFF;
+		}
+		location /files/get/ {
+			root					directory;
+			method					GET;
+		}
+        error_page 404          directory/custom_error/404.html;
+		client_max_body_size	1000000;
+		cgi						.cgi .php .py;
+	
+id_key!!!!!!!!!!!!!!!listen
+pos3
+j0
+&content[pos + j] listen			8080;
+		server_name		second_server;
+		location / {
+			root		directory/42green;
+			default		index.html;
+		}
+	
+content length120
+id_key!!!!!!!!!!!!!!!server_name
+pos20
+j0
+&content[pos + j] server_name		second_server;
+		location / {
+			root		directory/42green;
+			default		index.html;
+		}
+	
+content length120
+id_key!!!!!!!!!!!!!!!location
+location name /*
+pos + j 4
+content length 55
+pos + j 32
+content length 55
+pos + j 55
+content length 55
+BLOCKLOCATION
+			root		directory/42green;
+			default		index.html;
+		
+CONTENT = 
+	
+posat pos + j 
+posat pos + j 	BLOCKSERVER *********
+		listen			8080;
+		server_name		second_server;
+		location / {
+			root		directory/42green;
+			default		index.html;
+		}
+	
+id_key!!!!!!!!!!!!!!!listen
+pos3
+j0
+&content[pos + j] listen			8094;
+		server_name		42green;
+		location / {
+            root                    directory/42green;
+			method					GET;
+			default					index.html;
+		}
+	
+content length163
+id_key!!!!!!!!!!!!!!!server_name
+pos20
+j0
+&content[pos + j] server_name		42green;
+		location / {
+            root                    directory/42green;
+			method					GET;
+			default					index.html;
+		}
+	
+content length163
+id_key!!!!!!!!!!!!!!!location
+location name /*
+pos + j 13
+content length 104
+pos + j 59
+content length 104
+pos + j 78
+content length 104
+pos + j 104
+content length 104
+BLOCKLOCATION
+            root                    directory/42green;
+			method					GET;
+			default					index.html;
+		
+CONTENT = 
+	
+posat pos + j 
+posat pos + j 	BLOCKSERVER *********
+		listen			8094;
+		server_name		42green;
+		location / {
+            root                    directory/42green;
+			method					GET;
+			default					index.html;
+		}
+	
+id_key!!!!!!!!!!!!!!!listen
+pos3
+j0
+&content[pos + j] listen					8097;
+		server_name				42green_old;
+		location / {
+			return					301 http://localhost:8082;
+		}
+	
+content length111
+id_key!!!!!!!!!!!!!!!server_name
+pos22
+j0
+&content[pos + j] server_name				42green_old;
+		location / {
+			return					301 http://localhost:8082;
+		}
+	
+content length111
+id_key!!!!!!!!!!!!!!!location
+location name /*
+pos + j 4
+content length 44
+pos + j 44
+content length 44
+BLOCKLOCATION
+			return					301 http://localhost:8082;
+		
+CONTENT = 
+	
+posat pos + j 
+posat pos + j 	BLOCKSERVER *********
+		listen					8097;
+		server_name				42green_old;
+		location / {
+			return					301 http://localhost:8082;
+		}
+	
+1
 indice : [0]
 *************
 clé générale : [location /] | clé [default] | valeur [index.html] | clé [dirList] | valeur [OFF] | clé [root] | valeur [directory] | clé [upload] | valeur [upload]
 clé générale : [location /files/get/] | clé [method] | valeur [GET] | clé [root] | valeur [directory]
 clé générale : [server] | clé [cgi] | valeur [.cgi .php .py] | clé [client_max_body_size] | valeur [1000000] | clé [error_page] | valeur [404          directory/custom_error/404.html] | clé [listen] | valeur [8080] | clé [server_name] | valeur [default_server]
+*************
+
+indice : [1]
+*************
+clé générale : [location /] | clé [default] | valeur [index.html] | clé [root] | valeur [directory/42green]
+clé générale : [server] | clé [listen] | valeur [8080] | clé [server_name] | valeur [second_server]
+*************
+
+indice : [2]
+*************
+clé générale : [location /] | clé [default] | valeur [index.html] | clé [method] | valeur [GET] | clé [root] | valeur [directory/42green]
+clé générale : [server] | clé [listen] | valeur [8094] | clé [server_name] | valeur [42green]
+*************
+
+indice : [3]
+*************
+clé générale : [location /] | clé [return] | valeur [301 http://localhost:8082]
+clé générale : [server] | clé [listen] | valeur [8097] | clé [server_name] | valeur [42green_old]
 *************
 

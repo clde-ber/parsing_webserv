@@ -1,6 +1,6 @@
 .SUFFIXES:
 
-NAME	=	Zombie
+NAME	=	webserv
 LIST	=	serverAttributes \
 
 HEADER	=	-I includes/

@@ -39,6 +39,7 @@ class serverConf
         int isValidServer(std::string content);
         int setLocationId(std::string name);
         void printMap();
+        int getData();
 };
 
 #endif

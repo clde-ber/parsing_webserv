@@ -468,6 +468,112 @@ void serverConf::printMap()
     }
 }
 
+int serverConf::getData()
+{
+    std::cout << "Pour chaque serveur, récupérer son port (crea socket) " << std::endl;
+    size_t i = 0;
+    size_t j = 0;
+
+    while (i < http.size())
+    {
+        while (j < http.data()[i]["server"]["listen"].size())
+        {
+            std::cout << http.data()[i]["server"]["listen"][j] << std::endl;
+            j++;
+        }
+        j = 0;
+        i++;
+    }
+    std::cout << "Pour chaque serveur, récupérer son nbr max de connexion(taille) (crea socket) " << std::endl;
+    i = 0;
+    j = 0;
+
+    while (i < http.size())
+    {
+        while (j < http.data()[i]["server"]["client_max_body_size"].size())
+        {
+            std::cout << http.data()[i]["server"]["client_max_body_size"][j] << std::endl;
+            j++;
+        }
+        j = 0;
+        i++;
+    }
+    std::cout << "Pour chaque serveur, recupérer son nom (check socket) " << std::endl;
+    i = 0;
+    j = 0;
+
+    while (i < http.size())
+    {
+        while (j < http.data()[i]["server"]["server_name"].size())
+        {
+            std::cout << http.data()[i]["server"]["server_name"][j] << std::endl;
+            j++;
+        }
+        j = 0;
+        i++;
+    }
+    std::cout << "pour un serveur, recupere le port (gestion requete) " << std::endl;
+    i = 2; //index du serveur;
+    j = 0;
+
+    while (j < http.data()[i]["server"]["listen"].size())
+    {
+        std::cout << http.data()[i]["server"]["listen"][j] << std::endl;
+        j++;
+    }
+    std::cout << "pour un serveur, recuperer error page(gestion requete) " << std::endl;
+    i = 0; //index du serveur;
+    j = 0;
+
+    while (j < http.data()[i]["server"]["error_page"].size())
+    {
+        std::cout << http.data()[i]["server"]["error_page"][j] << std::endl;
+        j++;
+    }
+    std::cout << "pour un serveur, recuperer  la ou les roots (gestion requete) " << std::endl;
+    i = 0; //index du serveur;
+    j = 0;
+
+    while (j < http.data()[i]["server"]["root"].size())
+    {
+        std::cout << http.data()[i]["server"]["root"][j] << std::endl;
+        j++;
+    }
+    std::cout << "pour un serveur et une location, recuperer l'index " << std::endl;
+    i = 0;
+    j = 0;
+    std::map< std::string, std::map< std::string, std::vector< std::string > > >::iterator it = http.data()[i].begin();
+    std::map< std::string, std::map< std::string, std::vector< std::string > > >::iterator ite = http.data()[i].end();
+
+    for(; it != ite; it++)
+    {
+        if (it->first == "server")
+        {
+            while (j < http.data()[i][it->first]["index"].size())
+            {
+                std::cout << http.data()[i][it->first]["index"][j] << std::endl;
+                j++;
+            }
+        }
+        else
+        {
+            j = 0;
+            std::cout << "nom de la location : " << it->first << std::endl;
+            while (j < http.data()[i][it->first]["index"].size())
+            {
+                std::cout << http.data()[i]["server"]["client_max_body_size"][j] << std::endl;
+                j++;
+            }
+        }
+    }
+    //pour un serveur et une location, recuperer autoindex
+    //pour un serveur et une location, recuperer l'upload dir
+    //pour un serveur et une location, recuperer cgi
+    //pour un serveur et une location, recuperer redirect
+    // -> pareil
+    return 0;
+}
+
 int main(void)
 {
     serverConf conf;
@@ -506,5 +612,6 @@ int main(void)
     std::cout << output << std::endl;
     std::cout << "bool is valid : " << conf.parseContent(output) << std::endl;
     conf.printMap();
+    conf.getData();
     return TRUE;
 }

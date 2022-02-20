@@ -35,7 +35,7 @@ class serverConf
         std::string getBlock(std::string content);
         std::string getBlockServer(std::string content);
         std::string getBlockLocation(std::string content);
-        int isValidLocation(std::string content);
+        int isValidLocation(std::string content, std::string location_name);
         int isValidServer(std::string content);
         int setLocationId(std::string name);
         void printMap();

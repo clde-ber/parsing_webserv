@@ -44,79 +44,49 @@ Reading 812 characters... all characters read successfully.http {
 		}
 	}
 }
-bool is valid : id_keylisten
-CONTEEEEEEENTlisten      			8080;
-		server_name				default_server;
-		location / {
-			root					directory;
-			default					index.html;
-			upload					upload;
-			dirList					OFF;
-		}
-		location /files/get/ {
-			root					directory;
-			method					GET;
-		}
-        error_page 404          directory/custom_error/404.html;
-		client_max_body_size	1000000;
-		cgi						.cgi .php .py;
-	id_keyserver_name
-CONTEEEEEEENTserver_name				default_server;
-		location / {
-			root					directory;
-			default					index.html;
-			upload					upload;
-			dirList					OFF;
-		}
-		location /files/get/ {
-			root					directory;
-			method					GET;
-		}
-        error_page 404          directory/custom_error/404.html;
-		client_max_body_size	1000000;
-		cgi						.cgi .php .py;
-	id_keylocation
-location name  / *
+bool is valid : id_key!!!!!!!!!!!!!!!listen
+id_key!!!!!!!!!!!!!!!server_name
+id_key!!!!!!!!!!!!!!!location
 location name /*
+pos + j 4
+content length 95
+pos + j 27
+content length 95
+pos + j 54
+content length 95
+pos + j 76
+content length 95
+pos + j 95
+content length 95
 BLOCKLOCATION
 			root					directory;
 			default					index.html;
 			upload					upload;
 			dirList					OFF;
 		
-id_keylocation
-location name  /files/get/ *
+id_key!!!!!!!!!!!!!!!location
 location name /files/get/*
+pos + j 4
+content length 45
+pos + j 27
+content length 45
+pos + j 45
+content length 45
 BLOCKLOCATION
 			root					directory;
 			method					GET;
 		
-id_keyerror_page
-CONTEEEEEEENTerror_page 404          directory/custom_error/404.html;
-		client_max_body_size	1000000;
-		cgi						.cgi .php .py;
-	id_keyclient_max_body_size
-CONTEEEEEEENTclient_max_body_size	1000000;
-		cgi						.cgi .php .py;
-	id_keycgi
-CONTEEEEEEENTcgi						.cgi .php .py;
-	id_keycgi
-CONTEEEEEEENT
-	id_keyroot
-CONTEEEEEEENTroot					directory;
-			default					index.html;
-			upload					upload;
-			dirList					OFF;
-		id_keyroot
-CONTEEEEEEENT
-			default					index.html;
-			upload					upload;
-			dirList					OFF;
-		id_keyroot
-CONTEEEEEEENT
-			upload					upload;
-			dirList					OFF;
-		id_keyroot
-CONTEEEEEEENT
-			dirList					OFF;
-		id_keyroot
+id_key!!!!!!!!!!!!!!!error_page
+id_key!!!!!!!!!!!!!!!client_max_body_size
+id_key!!!!!!!!!!!!!!!cgi
+id_key!!!!!!!!!!!!!!!cgi
+2 heyla
+ici
+0
+indice : [0]
+*************
+clé générale : [location /] | clé [default] | valeur [index.html] | clé [dirList] | valeur [OFF] | clé [root] | valeur [directory] | clé [upload] | valeur [upload]
+clé générale : [location /files/get/] | clé [method] | valeur [GET] | clé [root] | valeur [directory]
+clé générale : [server] | clé [cgi] | valeur [.cgi .php .py] | clé [client_max_body_size] | valeur [1000000] | clé [error_page] | valeur [404          directory/custom_error/404.html] | clé [listen] | valeur [8080] | clé [server_name] | valeur [default_server]
+*************
+

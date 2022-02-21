@@ -25,6 +25,8 @@ class serverConf
         serverConf(serverConf const & rhs) : location_ids(std::vector< std::string >(rhs.location_ids)), general(std::vector< std::string >(rhs.general)), http(std::vector< std::map< std::string, std::map< std::string, std::vector< std::string > > > >(rhs.http)) {}
         serverConf operator=(serverConf & rhs) { location_ids = std::vector< std::string >(rhs.location_ids); general = std::vector< std::string >(rhs.general); http = std::vector< std::map< std::string, std::map< std::string, std::vector< std::string > > > >(rhs.http); return *this; }
         virtual ~serverConf() {}
+        std::string getContent(std::string file);
+        std::string removeComments(std::string file);
         int parseContent(std::string content);
         void pushServerIds(std::map< std::string, std::vector< std::string > > server);
         void pushLocationIds(std::map< std::string, std::vector< std::string > > location);

@@ -1,6 +1,6 @@
 #include "serverAttributes.hpp"
 
-std::string getContent(std::string file)
+std::string serverConf::getContent(std::string file)
 {
     std::string ret = "";
     std::ifstream is (file.c_str(), std::ifstream::binary);
@@ -28,6 +28,37 @@ std::string getContent(std::string file)
     delete [] buffer;
   }
   return ret;
+}
+
+std::string serverConf::removeComments(std::string file)
+{
+    size_t pos = 0;
+    size_t i = 0;
+    size_t j = 0;
+    std::string buf = "";
+    //std::string remaining = "";
+
+    while (file.find("#", pos) != std::string::npos)
+    {
+        i = file.find("#", pos);
+        if (file.find("\n", i) != std::string::npos)
+        {
+            j = file.find("\n", i);
+            std::cout << "has found j " << j << std::endl;
+            std::cout << "has found i " << i << std::endl;
+            buf += file.substr(pos, i - pos);
+        }
+        else
+        {
+            std::cout << "returns" << std::endl;
+            return buf ;
+        }
+        std::cout << "? " << std::endl;
+        pos = j;
+    }
+    std::cout << "heyhey" << std::endl;
+    buf += file.substr(pos, file.length() - pos);
+    return buf;
 }
 
 void serverConf::pushServerIds(std::map< std::string, std::vector< std::string > > server)
@@ -425,6 +456,7 @@ int main(void)
 {
     serverConf conf;
     std::vector< std::string > empty;
+    std::string noComment = "";
 
     conf.server_ids.push_back("listen");
     conf.server_ids.push_back("server_name");
@@ -455,9 +487,10 @@ int main(void)
     conf.location_ids.push_back("dirList");
     std::string file = "example.conf";
     std::string output = "";
-    output += getContent(file);
-    std::cout << output << std::endl;
-    std::cout << "bool is valid : " << conf.parseContent(output) << std::endl;
+    output += conf.getContent(file);
+    noComment = conf.removeComments(output);
+    std::cout << noComment << std::endl;
+    std::cout << "bool is valid : " << conf.parseContent(noComment) << std::endl;
     conf.printMap();
     conf.getData();
     return TRUE;

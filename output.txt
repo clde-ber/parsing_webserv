@@ -1,4 +1,11 @@
-Reading 812 characters... all characters read successfully.http {
+Reading 857 characters... all characters read successfully.has found j 199
+has found i 179
+? 
+has found j 426
+has found i 401
+? 
+heyhey
+http {
 	server {
 		listen      			8080;
 		server_name				default_server;
@@ -44,269 +51,7 @@ Reading 812 characters... all characters read successfully.http {
 		}
 	}
 }
-bool is valid : id_key!!!!!!!!!!!!!!!listen
-pos3
-j0
-&content[pos + j] listen      			8080;
-		server_name				default_server;
-		location / {
-			root					directory;
-			default					index.html;
-			upload					upload;
-			dirList					OFF;
-		}
-		location /files/get/ {
-			root					directory;
-			method					GET;
-		}
-        error_page 404          directory/custom_error/404.html;
-		client_max_body_size	1000000;
-		cgi						.cgi .php .py;
-	
-content length363
-id_key!!!!!!!!!!!!!!!server_name
-pos26
-j0
-&content[pos + j] server_name				default_server;
-		location / {
-			root					directory;
-			default					index.html;
-			upload					upload;
-			dirList					OFF;
-		}
-		location /files/get/ {
-			root					directory;
-			method					GET;
-		}
-        error_page 404          directory/custom_error/404.html;
-		client_max_body_size	1000000;
-		cgi						.cgi .php .py;
-	
-content length363
-id_key!!!!!!!!!!!!!!!location
-location name /*
-pos + j 4
-content length 95
-pos + j 27
-content length 95
-pos + j 54
-content length 95
-pos + j 76
-content length 95
-pos + j 95
-content length 95
-BLOCKLOCATION
-			root					directory;
-			default					index.html;
-			upload					upload;
-			dirList					OFF;
-		
-CONTENT = 
-		location /files/get/ {
-			root					directory;
-			method					GET;
-		}
-        error_page 404          directory/custom_error/404.html;
-		client_max_body_size	1000000;
-		cgi						.cgi .php .py;
-	
-posat pos + j 
-posat pos + j 	posat pos + j 	id_key!!!!!!!!!!!!!!!location
-location name /files/get/*
-pos + j 4
-content length 45
-pos + j 27
-content length 45
-pos + j 45
-content length 45
-BLOCKLOCATION
-			root					directory;
-			method					GET;
-		
-CONTENT = 
-        error_page 404          directory/custom_error/404.html;
-		client_max_body_size	1000000;
-		cgi						.cgi .php .py;
-	
-posat pos + j 
-posat pos + j  posat pos + j  posat pos + j  posat pos + j  posat pos + j  posat pos + j  posat pos + j  posat pos + j  id_key!!!!!!!!!!!!!!!error_page
-pos247
-j0
-&content[pos + j] error_page 404          directory/custom_error/404.html;
-		client_max_body_size	1000000;
-		cgi						.cgi .php .py;
-	
-content length363
-id_key!!!!!!!!!!!!!!!client_max_body_size
-pos306
-j0
-&content[pos + j] client_max_body_size	1000000;
-		cgi						.cgi .php .py;
-	
-content length363
-id_key!!!!!!!!!!!!!!!cgi
-pos338
-j0
-&content[pos + j] cgi						.cgi .php .py;
-	
-content length363
-id_key!!!!!!!!!!!!!!!cgi
-pos361
-j0
-&content[pos + j] 
-	
-posat pos + j 
-posat pos + j 	content length363
-BLOCKSERVER *********
-		listen      			8080;
-		server_name				default_server;
-		location / {
-			root					directory;
-			default					index.html;
-			upload					upload;
-			dirList					OFF;
-		}
-		location /files/get/ {
-			root					directory;
-			method					GET;
-		}
-        error_page 404          directory/custom_error/404.html;
-		client_max_body_size	1000000;
-		cgi						.cgi .php .py;
-	
-id_key!!!!!!!!!!!!!!!listen
-pos3
-j0
-&content[pos + j] listen			8080;
-		server_name		second_server;
-		location / {
-			root		directory/42green;
-			default		index.html;
-		}
-	
-content length120
-id_key!!!!!!!!!!!!!!!server_name
-pos20
-j0
-&content[pos + j] server_name		second_server;
-		location / {
-			root		directory/42green;
-			default		index.html;
-		}
-	
-content length120
-id_key!!!!!!!!!!!!!!!location
-location name /*
-pos + j 4
-content length 55
-pos + j 32
-content length 55
-pos + j 55
-content length 55
-BLOCKLOCATION
-			root		directory/42green;
-			default		index.html;
-		
-CONTENT = 
-	
-posat pos + j 
-posat pos + j 	BLOCKSERVER *********
-		listen			8080;
-		server_name		second_server;
-		location / {
-			root		directory/42green;
-			default		index.html;
-		}
-	
-id_key!!!!!!!!!!!!!!!listen
-pos3
-j0
-&content[pos + j] listen			8094;
-		server_name		42green;
-		location / {
-            root                    directory/42green;
-			method					GET;
-			default					index.html;
-		}
-	
-content length163
-id_key!!!!!!!!!!!!!!!server_name
-pos20
-j0
-&content[pos + j] server_name		42green;
-		location / {
-            root                    directory/42green;
-			method					GET;
-			default					index.html;
-		}
-	
-content length163
-id_key!!!!!!!!!!!!!!!location
-location name /*
-pos + j 13
-content length 104
-pos + j 59
-content length 104
-pos + j 78
-content length 104
-pos + j 104
-content length 104
-BLOCKLOCATION
-            root                    directory/42green;
-			method					GET;
-			default					index.html;
-		
-CONTENT = 
-	
-posat pos + j 
-posat pos + j 	BLOCKSERVER *********
-		listen			8094;
-		server_name		42green;
-		location / {
-            root                    directory/42green;
-			method					GET;
-			default					index.html;
-		}
-	
-id_key!!!!!!!!!!!!!!!listen
-pos3
-j0
-&content[pos + j] listen					8097;
-		server_name				42green_old;
-		location / {
-			return					301 http://localhost:8082;
-		}
-	
-content length111
-id_key!!!!!!!!!!!!!!!server_name
-pos22
-j0
-&content[pos + j] server_name				42green_old;
-		location / {
-			return					301 http://localhost:8082;
-		}
-	
-content length111
-id_key!!!!!!!!!!!!!!!location
-location name /*
-pos + j 4
-content length 44
-pos + j 44
-content length 44
-BLOCKLOCATION
-			return					301 http://localhost:8082;
-		
-CONTENT = 
-	
-posat pos + j 
-posat pos + j 	BLOCKSERVER *********
-		listen					8097;
-		server_name				42green_old;
-		location / {
-			return					301 http://localhost:8082;
-		}
-	
-1
+bool is valid : 1
 indice : [0]
 *************
 clé générale : [location /] | clé [default] | valeur [index.html] | clé [dirList] | valeur [OFF] | clé [root] | valeur [directory] | clé [upload] | valeur [upload]
@@ -332,3 +77,23 @@ clé générale : [location /] | clé [return] | valeur [301 http://localhost:80
 clé générale : [server] | clé [listen] | valeur [8097] | clé [server_name] | valeur [42green_old]
 *************
 
+Pour chaque serveur, récupérer son port (crea socket) 
+8080
+8080
+8094
+8097
+Pour chaque serveur, récupérer son nbr max de connexion(taille) (crea socket) 
+1000000
+Pour chaque serveur, recupérer son nom (check socket) 
+default_server
+second_server
+42green
+42green_old
+pour un serveur, recupere le port (gestion requete) 
+8094
+pour un serveur, recuperer error page(gestion requete) 
+404          directory/custom_error/404.html
+pour un serveur, recuperer  la ou les roots (gestion requete) 
+pour un serveur et une location, recuperer l'index 
+nom de la location : location /
+nom de la location : location /files/get/

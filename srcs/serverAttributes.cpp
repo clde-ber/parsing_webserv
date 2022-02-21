@@ -66,20 +66,10 @@ void serverConf::pushLocationIds(std::map< std::string, std::vector< std::string
 
 int serverConf::setLocationId(std::string name)
 {
-    //size_t i = 0;
-    //size_t pos = 0;
     std::map< std::string, std::vector< std::string > > location;
 
     pushLocationIds(location);
-    //while (std::isspace(static_cast<unsigned char>(content.at(pos))))
-    //    pos++;
-    //while (i < server_ids.size() && (pos = content.find(server_ids[i], pos)) == std::string::npos)
-    //    i++;
-    //if (server_ids[i] == "" && pos == std::string::npos)
-    //    return FALSE;
-    //std::map< std::string, std::map< std::string, std::vector< std::string > > > map_ids;
     http.data()[http.size() - 1].insert(std::make_pair("location " + name, location));
-    //http.push_back(map_ids);
     return TRUE;
 }
 
@@ -100,7 +90,6 @@ int serverConf::isValidLocation(std::string content, std::string location_name)
         next_id = 0;
         while (i < location_ids.size())
         {
-            //std::cout << "remaining content" << &content[pos] << std::endl;
             if (content.find(location_ids[i], pos) != std::string::npos && isspace(content.at(content.find(location_ids[i], pos) + location_ids[i].length())))
             {
                 if (location_ids[i] != "location" && (content.find(location_ids[i], pos) < next_id || next_id == 0))
@@ -119,17 +108,12 @@ int serverConf::isValidLocation(std::string content, std::string location_name)
         }
         while (pos + j < content.length() && isspace(content.at(pos + j)))
             j++;
-        std::cout << "pos + j " << pos + j << std::endl;
-        std::cout << "content length " << content.length() << std::endl;
         if (pos + j == content.length())
             return TRUE;
         else if (content.find(";", pos) != std::string::npos)
             idx = content.find(";", pos);
         else
-        {
-            std::cout << "c ici que ca merde" << std::endl;
             return FALSE;
-        }
         j = 0;
         std::vector< std::string > value;
         std::string raw_content = content.substr(pos + key.length(), idx - (pos + key.length()));
@@ -163,7 +147,6 @@ int serverConf::isValidServer(std::string content)
         next_id = 0;
         while (i < server_ids.size())
         {
-            //std::cout << "remaining content" << &content[pos] << std::endl;
             if (content.find(server_ids[i], pos) != std::string::npos && isspace(content.at(content.find(server_ids[i], pos) + server_ids[i].length())))
             {
                 if (content.find(server_ids[i], pos) < next_id || next_id == 0)
@@ -174,32 +157,22 @@ int serverConf::isValidServer(std::string content)
             }
             i++;
         }
-        std::cout << "id_key!!!!!!!!!!!!!!!" << id_key << std::endl;
         if (id_key == "location")
         {
             location_name = content.substr(content.find(id_key, pos) + id_key.length(), content.substr(content.find(id_key, pos) + id_key.length()).find("{", 0));
             location_name = location_name.substr(location_name.find_first_not_of("\t\n\r\v\f "), location_name.find_last_not_of("\t\n\r\v\f "));
-            std::cout << "location name " << location_name << "*" << std::endl;
             setLocationId(location_name);
             if (content.find("{", pos) != std::string::npos)
                 blockLocation = getBlockLocation(&content[content.find("{", pos) + 1]);
             if (isValidLocation(blockLocation, location_name) == FALSE)
-            {
-                std::cout << "1hey la" << std::endl;
                 return FALSE;
-            }
-            std::cout << "BLOCKLOCATION" << blockLocation <<  std::endl;
             if (content.find("}", pos) != std::string::npos)
                 pos = content.find("}", pos) + 1;
-            std::cout << "CONTENT = " << &content[pos] << std::endl;
             while (pos + j < content.length() && isspace(content.at(pos + j)))
-            {
-                std::cout << "posat pos + j " << content.at(pos + j);
                 j++;
-            }
-            is_location = 1;
             if (pos + j == content.length())
                 return TRUE;
+            is_location = 1;
             j = 0;
         }
         else
@@ -209,142 +182,37 @@ int serverConf::isValidServer(std::string content)
             category = "server";
             key = id_key;
         }
-        if (is_location == 0)
+        if (!is_location)
         {
-            std::cout << "pos" << pos << std::endl;
-            std::cout << "j" << j << std::endl;
-            std::cout << "&content[pos + j] " << content.substr(pos + j, content.length() - (pos + j)) << std::endl;
-        while (pos + j < content.length() && isspace(content.at(pos + j)))
-        {
-            std::cout << "posat pos + j " << content.at(pos + j);
-            j++;
-        }
-        //std::cout << "pos + j" << pos + j << std::endl;
-        std::cout << "content length" << content.length() << std::endl;
-        if (pos + j == content.length())
-            return TRUE;
-        else if (content.find(";", pos) != std::string::npos)
-            idx = content.find(";", pos);
-        else
-        {
-            std::cout << "2 heyla" << std::endl;
-            return FALSE;
-        }
-        j = 0;
-        std::vector< std::string > value;
-        std::string raw_content = content.substr(pos + key.length(), idx - (pos + key.length()));
-        std::string trim_content = raw_content.substr(raw_content.find_first_not_of("\t\n\r\v\f "), raw_content.length() - raw_content.find_first_not_of("\t\n\r\v\f "));
-        value.push_back(trim_content);
-        pos = idx + 1;
-        http.data()[http.size() - 1][category][key].push_back(trim_content);
-        i = 0;
+            while (pos + j < content.length() && isspace(content.at(pos + j)))
+                j++;
+            if (pos + j == content.length())
+                return TRUE;
+            else if (content.find(";", pos) != std::string::npos)
+                idx = content.find(";", pos);
+            else
+                return FALSE;
+            j = 0;
+            std::vector< std::string > value;
+            std::string raw_content = content.substr(pos + key.length(), idx - (pos + key.length()));
+            std::string trim_content = raw_content.substr(raw_content.find_first_not_of("\t\n\r\v\f "), raw_content.length() - raw_content.find_first_not_of("\t\n\r\v\f "));
+            value.push_back(trim_content);
+            pos = idx + 1;
+            http.data()[http.size() - 1][category][key].push_back(trim_content);
+            i = 0;
         }
     }
     return TRUE;
 }
 
-int serverConf::setIds(std::string content)
+int serverConf::setServerId()
 {
-    (void)content;
-    //size_t i = 0;
-    //size_t pos = 0;
     std::map< std::string, std::vector< std::string > > server;
-    std::map< std::string, std::vector< std::string > > location;
 
     pushServerIds(server);
-    //pushLocationIds(location);
-    //while (std::isspace(static_cast<unsigned char>(content.at(pos))))
-    //    pos++;
-    //while (i < server_ids.size() && (pos = content.find(server_ids[i], pos)) == std::string::npos)
-    //    i++;
-    //if (server_ids[i] == "" && pos == std::string::npos)
-    //    return FALSE;
     std::map< std::string, std::map< std::string, std::vector< std::string > > > map_ids;
     map_ids.insert(std::make_pair("server", server));
-    //map_ids.insert(std::make_pair("location", location));
     http.push_back(map_ids);
-    return TRUE;
-}
-
-int serverConf::setValues(std::string content)
-{
-    //size_t i = 0;
-    //size_t pos = 0;
-
-    setIds(content);
-    //while (std::isspace(static_cast<unsigned char>(content.at(pos))))
-    //    pos++;
-   /* while (i < http.size())
-    {
-        std::map< std::string, std::map< std::string, std::vector< std::string > > >::iterator it = http[i].begin();
-        std::map< std::string, std::map< std::string, std::vector< std::string > > >::iterator ite = http[i].end();
-        std::cout << "it->first" << it->first << std::endl;
-        while (it != ite && (pos = content.find(it->first, pos)) == std::string::npos)
-            it++;
-        i++;
-    }*/
-    //if (general[i] == "" && pos == std::string::npos)
-    //    return FALSE;
-    return TRUE;
-}
-
-int serverConf::isValid(std::string content)
-{
-    size_t i = 0;
-    size_t pos = 0;
-    size_t idx = 0;
-    size_t j = 0;
-    std::string key = "";
-    std::string category = "";
-
-    while (pos != content.length())
-    {
-        category = "";
-        while (i < server_ids.size())
-        {
-            if (content.find(server_ids[i], pos) != std::string::npos && isspace(content.at(content.find(server_ids[i], pos) + server_ids[i].length())))
-            {
-                if (http.data()[http.size() - 1]["server"][server_ids[i]].empty())
-                {
-                    pos = content.find(server_ids[i], pos);
-                    category = "server";
-                    key = server_ids[i];
-                    break ;
-                }
-            }
-            i++;
-        }
-        i = 0;
-        while (category == "" && i < location_ids.size())
-        {
-            if (content.find(location_ids[i], pos) != std::string::npos && isspace(content.at(content.find(location_ids[i], pos) + location_ids[i].length())))
-            {
-                if (http.data()[http.size() - 1]["location"][location_ids[i]].empty())
-                {
-                    pos = content.find(location_ids[i], pos);
-                    category = "location";
-                    key = location_ids[i];
-                    break ;
-                }
-            }
-            i++;
-        }
-        while (pos + j < content.length() && isspace(content.at(pos + j)))
-            j++;
-        if (pos + j == content.length())
-            return TRUE;
-        else if (content.find(";", pos) != std::string::npos)
-            idx = content.find(";", pos);
-        else
-            return FALSE;
-        std::vector< std::string > value;
-        std::string raw_content = content.substr(pos + key.length(), idx - (pos + key.length()));
-        std::string trim_content = raw_content.substr(raw_content.find_first_not_of("\t\n\r\v\f "), raw_content.length() - raw_content.find_first_not_of("\t\n\r\v\f "));
-        value.push_back(content.substr(pos + key.length(), idx - (pos + key.length())));
-        pos = idx + 1;
-        http.data()[http.size() - 1][category].insert(std::make_pair(key, value));
-        i = 0;
-    }
     return TRUE;
 }
 
@@ -384,7 +252,6 @@ int serverConf::parseContent(std::string content)
 {
     size_t posStart = 0;
     size_t posEnd = content.length();
-    //check wheter there is an even number of {/}
     while (posStart != posEnd)
     {
         if ((posStart = content.find("{", posStart)) == std::string::npos)
@@ -406,29 +273,12 @@ int serverConf::parseContent(std::string content)
     {
         if ((server_idx = content.find("server", server_idx)) != std::string::npos)
         {
-            //server_idx = content.find("server", server_idx);
             if (content.find("{", server_idx + 7) != std::string::npos)
                 blockServer = getBlockServer(&content[content.find("{", server_idx + 7) + 1]);
-            //server_idx = content.find(blockServer, server_idx) + blockServer.length();
             server_idx = content.find("{", server_idx + 7) + blockServer.length();
-            if (setValues(blockServer) == FALSE)
-                return FALSE;
+            setServerId();
             if (isValidServer(blockServer) == FALSE)
-            {
-                std::cout << "ici" << std::endl;
                 return FALSE;
-            }
-            std::cout << "BLOCKSERVER *********" << blockServer << std::endl;
-            //location_idx = server_idx;
-            /*while (blockServer.find("location", location_idx) != std::string::npos && isspace(blockServer.at(blockServer.find("location", location_idx) + 9)))
-            {
-                if (blockServer.find("{", location_idx) != std::string::npos)
-                    blockLocation = getBlockLocation(&blockServer[blockServer.find("{", location_idx) + 1]);
-                std::cout << "block loc => " << blockLocation << std::endl;
-                if (isValidLocation(blockLocation) == FALSE)
-                    return FALSE;
-                location_idx += blockServer.find("{", location_idx) + blockLocation.length();
-            }*/
         }
         else
             return TRUE;
@@ -440,16 +290,13 @@ void serverConf::printMap()
 {
     size_t i = 0;
     size_t j = 0;
-    //http.data()[http.size() - 1][category].insert(std::make_pair(key, value));
     while (i < http.size())
     {
         std::cout << "indice : [" << i << "]" << std::endl;
         std::cout << "*************" << std::endl;
         for (std::map< std::string, std::map< std::string, std::vector< std::string > > >::iterator it = http.data()[i].begin(); it != http.data()[i].end(); it++)
-        //while (j < http.data()[i]["server"].size())
         {
             std::cout << "clé générale : [" << it->first << "]";
-            //std::cout << "clé : [" << server_ids[j] << "]";
             for (std::map< std::string, std::vector< std::string > >::iterator itk = http.data()[i][it->first].begin(); itk != http.data()[i][it->first].end(); itk++)
             {
                 std::cout << " | clé [" << itk->first << "]";

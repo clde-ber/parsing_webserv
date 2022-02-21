@@ -452,6 +452,23 @@ int serverConf::getData()
     return 0;
 }
 
+int serverConf::checkMissing()
+{
+    size_t i = 0;
+
+    while (i < http.size())
+    {
+        if (!http.data()[i]["server"]["listen"].size())
+            return FALSE;
+        if (!http.data()[i]["server"]["location"].size())
+            return FALSE;
+        if (!http.data()[i]["server"]["root"].size())
+            return FALSE;
+        i++;
+    }
+    return TRUE;
+}
+
 int main(void)
 {
     serverConf conf;
@@ -490,7 +507,8 @@ int main(void)
     output += conf.getContent(file);
     noComment = conf.removeComments(output);
     std::cout << noComment << std::endl;
-    std::cout << "bool is valid : " << conf.parseContent(noComment) << std::endl;
+    std::cout << "IS VALID FORMAT " << conf.parseContent(noComment) << std::endl;
+    std::cout << "IS VALID - MISSING INFO " << conf.checkMissing() << std::endl;
     conf.printMap();
     conf.getData();
     return TRUE;

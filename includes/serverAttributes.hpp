@@ -40,6 +40,7 @@ class serverConf
         int setServerId();
         void printMap();
         int getData();
+        int checkMissing();
 };
 
 #endif

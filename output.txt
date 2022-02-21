@@ -51,12 +51,13 @@ http {
 		}
 	}
 }
-bool is valid : 1
+IS VALID FORMAT 1
+IS VALID - MISSING INFO 0
 indice : [0]
 *************
 clé générale : [location /] | clé [default] | valeur [index.html] | clé [dirList] | valeur [OFF] | clé [root] | valeur [directory] | clé [upload] | valeur [upload]
 clé générale : [location /files/get/] | clé [method] | valeur [GET] | clé [root] | valeur [directory]
-clé générale : [server] | clé [cgi] | valeur [.cgi .php .py] | clé [client_max_body_size] | valeur [1000000] | clé [error_page] | valeur [404          directory/custom_error/404.html] | clé [listen] | valeur [8080] | clé [server_name] | valeur [default_server]
+clé générale : [server] | clé [cgi] | valeur [.cgi .php .py] | clé [client_max_body_size] | valeur [1000000] | clé [error_page] | valeur [404          directory/custom_error/404.html] | clé [listen] | valeur [8080] | clé [location] | clé [server_name] | valeur [default_server]
 *************
 
 indice : [1]

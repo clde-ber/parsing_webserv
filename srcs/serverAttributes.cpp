@@ -456,6 +456,8 @@ int serverConf::checkMissing()
 {
     size_t i = 0;
 
+    if (http.size() == 0)
+        return FALSE;
     while (i < http.size())
     {
         if (!http.data()[i]["server"]["listen"].size())
@@ -474,6 +476,7 @@ int main(void)
     serverConf conf;
     std::vector< std::string > empty;
     std::string noComment = "";
+    int ret = 0;
 
     conf.server_ids.push_back("listen");
     conf.server_ids.push_back("server_name");
@@ -502,13 +505,26 @@ int main(void)
     conf.location_ids.push_back("default");
     conf.location_ids.push_back("upload");
     conf.location_ids.push_back("dirList");
-    std::string file = "example.conf";
+    std::string file = "empty.conf";
     std::string output = "";
     output += conf.getContent(file);
     noComment = conf.removeComments(output);
     std::cout << noComment << std::endl;
-    std::cout << "IS VALID FORMAT " << conf.parseContent(noComment) << std::endl;
-    std::cout << "IS VALID - MISSING INFO " << conf.checkMissing() << std::endl;
+    if (noComment.empty())
+    {
+        std::cout << "IS VALID - EMPTY FILE 0" << std::endl;
+        return FALSE;
+    }
+    else
+        std::cout << "IS VALID - EMPTY FILE 1" << std::endl;
+    ret = conf.parseContent(noComment);
+    std::cout << "IS VALID FORMAT " << ret << std::endl;
+    if (!ret)
+        return FALSE;
+    ret = conf.checkMissing();
+    std::cout << "IS VALID - MISSING INFO " << ret << std::endl;
+    if (!ret)
+        return FALSE;
     conf.printMap();
     conf.getData();
     return TRUE;

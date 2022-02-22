@@ -63,7 +63,7 @@ std::string serverConf::removeComments(std::string file)
 
 void serverConf::pushServerIds(std::map< std::string, std::vector< std::string > > server)
 {
-    server.insert(std::pair< std::string, std::vector< std::string > >("location", std::vector< std::string >()));
+    //server.insert(std::pair< std::string, std::vector< std::string > >("location", std::vector< std::string >()));
     server.insert(std::pair< std::string, std::vector< std::string > >("listen", std::vector< std::string >()));
     server.insert(std::pair< std::string, std::vector< std::string > >("server_name", std::vector< std::string >()));
     server.insert(std::pair< std::string, std::vector< std::string > >("client_max_body_size", std::vector< std::string >()));
@@ -72,6 +72,7 @@ void serverConf::pushServerIds(std::map< std::string, std::vector< std::string >
     server.insert(std::pair< std::string, std::vector< std::string > >("index", std::vector< std::string >()));
     server.insert(std::pair< std::string, std::vector< std::string > >("return", std::vector< std::string >()));
     server.insert(std::pair< std::string, std::vector< std::string > >("cgi", std::vector< std::string >()));
+    server.insert(std::pair< std::string, std::vector< std::string > >("access_log", std::vector< std::string >()));
 }
 
 void serverConf::pushLocationIds(std::map< std::string, std::vector< std::string > > location)
@@ -93,6 +94,7 @@ void serverConf::pushLocationIds(std::map< std::string, std::vector< std::string
     location.insert(std::pair< std::string, std::vector< std::string > >("default", std::vector< std::string >()));
     location.insert(std::pair< std::string, std::vector< std::string > >("upload", std::vector< std::string >()));
     location.insert(std::pair< std::string, std::vector< std::string > >("dirList", std::vector< std::string >()));
+    location.insert(std::pair< std::string, std::vector< std::string > >("fastcgi_pass", std::vector< std::string >()));
 }
 
 int serverConf::setLocationId(std::string name)
@@ -112,24 +114,32 @@ int serverConf::isValidLocation(std::string content, std::string location_name)
     size_t j = 0;
     std::string key = "";
     std::string category = "";
-    size_t next_id = 0;
+    size_t prev_id = 0;
     std::string id_key = "";
+    bool found = 0;
 
+    std::cout << "BLOCKLOCATION" << content << std::endl;
     while (pos != content.length())
     {
         i = 0;
-        next_id = 0;
+        prev_id = 0;
         while (i < location_ids.size())
         {
             if (content.find(location_ids[i], pos) != std::string::npos && isspace(content.at(content.find(location_ids[i], pos) + location_ids[i].length())))
             {
-                if (location_ids[i] != "location" && (content.find(location_ids[i], pos) < next_id || next_id == 0))
+                if (content.find(location_ids[i], pos) < prev_id || prev_id == 0)
                 {
                     id_key = location_ids[i];
-                    next_id = content.find(id_key, pos);
+                    prev_id = content.find(location_ids[i], pos);
                 }
+                found = 1;
             }
             i++;
+        }
+        if (!found)
+        {
+            std::cout << "&content[pos]" << &content[pos] << std::endl;
+            return FALSE;
         }
         if (http.data()[http.size() - 1]["location " + location_name][id_key].empty())
         {
@@ -167,26 +177,34 @@ int serverConf::isValidServer(std::string content)
     std::string category = "";
     std::string blockLocation = "";
     bool is_location = 0;
-    size_t next_id = 0;
+    size_t prev_id = 0;
     std::string id_key = "";
     std::string location_name = "";
+    bool found = 0;
 
+    std::cout << "BLOCKSERVER" << content << std::endl;
     while (pos != content.length())
     {
         is_location = 0;
         i = 0;
-        next_id = 0;
+        prev_id = 0;
         while (i < server_ids.size())
         {
             if (content.find(server_ids[i], pos) != std::string::npos && isspace(content.at(content.find(server_ids[i], pos) + server_ids[i].length())))
             {
-                if (content.find(server_ids[i], pos) < next_id || next_id == 0)
+                if (content.find(server_ids[i], pos) < prev_id || prev_id == 0)
                 {
                     id_key = server_ids[i];
-                    next_id = content.find(id_key, pos);
+                    prev_id = content.find(server_ids[i], pos);
                 }
+                found = 1;
             }
             i++;
+        }
+        if (!found)
+        {
+            std::cout << "&content[pos]" << &content[pos] << std::endl;
+            return FALSE;
         }
         if (id_key == "location")
         {
@@ -455,6 +473,7 @@ int serverConf::getData()
 int serverConf::checkMissing()
 {
     size_t i = 0;
+    size_t j = 1;
 
     if (http.size() == 0)
         return FALSE;
@@ -462,9 +481,9 @@ int serverConf::checkMissing()
     {
         if (!http.data()[i]["server"]["listen"].size())
             return FALSE;
-        if (!http.data()[i]["server"]["location"].size())
-            return FALSE;
         if (!http.data()[i]["server"]["root"].size())
+            return FALSE;
+        if (j == http.data()[i].size())
             return FALSE;
         i++;
     }
@@ -487,13 +506,14 @@ int main(void)
     conf.server_ids.push_back("index");
     conf.server_ids.push_back("return");
     conf.server_ids.push_back("cgi");
-    conf.server_ids.push_back("location");
+    conf.server_ids.push_back("access_log");
     conf.location_ids.push_back("root");
     conf.location_ids.push_back("index");
     conf.location_ids.push_back("methods");
     conf.location_ids.push_back("autoindex");
     conf.location_ids.push_back("upload_dir");
     conf.location_ids.push_back("cgi");
+    conf.location_ids.push_back("fastcgi_pass");
     conf.location_ids.push_back("redirect");
     conf.location_ids.push_back("return");
     conf.location_ids.push_back("try_files");
@@ -505,7 +525,7 @@ int main(void)
     conf.location_ids.push_back("default");
     conf.location_ids.push_back("upload");
     conf.location_ids.push_back("dirList");
-    std::string file = "empty.conf";
+    std::string file = "nginx2.conf";
     std::string output = "";
     output += conf.getContent(file);
     noComment = conf.removeComments(output);
@@ -523,8 +543,8 @@ int main(void)
         return FALSE;
     ret = conf.checkMissing();
     std::cout << "IS VALID - MISSING INFO " << ret << std::endl;
-    if (!ret)
-        return FALSE;
+    //if (!ret)
+    //    return FALSE;
     conf.printMap();
     conf.getData();
     return TRUE;
